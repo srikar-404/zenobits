@@ -302,8 +302,8 @@ select option{background:var(--card)}
   height:0;
   padding-top:0 !important;
   padding-bottom:0 !important;
-  transition:height 0.32s cubic-bezier(0.4,0,0.2,1),
-             padding 0.32s cubic-bezier(0.4,0,0.2,1);
+  transition:height 0.28s cubic-bezier(0.25,0.46,0.45,0.94),
+             padding 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 .grp-body.expanded{
   padding-top:8px !important;
@@ -711,6 +711,7 @@ function saveGroup(){
   if(!n){toast('Enter a group name');return;}
   const gid='g'+Date.now().toString();
   S.groups.push({id:gid,name:n});
+  collapsedGroups[gid]=true; // start collapsed
   save();closeM('m-group');
   document.getElementById('g-name').value='';
   // open step 2 — add habits to this group
@@ -775,21 +776,31 @@ function togGroup(gid){
  
   if(collapsedGroups[gid]){
     const h=body.scrollHeight;
+    body.style.transition='none';
     body.style.height=h+'px';
     body.offsetHeight;
+    body.style.transition='';
     requestAnimationFrame(()=>{
-      body.style.height='0px';
-      body.classList.remove('expanded');
+      requestAnimationFrame(()=>{
+        body.style.height='0px';
+        body.classList.remove('expanded');
+      });
     });
     if(chev)chev.classList.remove('open');
     if(hdr)hdr.style.borderRadius='16px';
     setTimeout(()=>{ body.style.height=''; },340);
   } else {
-    body.style.height='0px';
     body.classList.add('expanded');
+    body.style.height='0px';
+    body.style.transition='none';
     body.offsetHeight;
     const target=body.scrollHeight;
-    requestAnimationFrame(()=>{ body.style.height=target+'px'; });
+    body.style.transition='';
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        body.style.height=target+'px';
+      });
+    });
     if(chev)chev.classList.add('open');
     if(hdr)hdr.style.borderRadius='16px 16px 0 0';
     setTimeout(()=>{ body.style.height='auto'; },340);
@@ -907,7 +918,7 @@ function togHDay(hid,dt){
 /* ═══════════════ SWIPE CARDS ═══════════════ */
 function attachSwipe(cardEl, hid) {
   let startX=0,startY=0,curX=0,dragging=false,isHoriz=null;
-  const THRESHOLD=80;
+  const THRESHOLD=70; // how far to swipe to trigger
  
   function onStart(e){
     const pt=e.touches?e.touches[0]:e;
@@ -921,38 +932,41 @@ function attachSwipe(cardEl, hid) {
     const dx=pt.clientX-startX;
     const dy=pt.clientY-startY;
     if(isHoriz===null){
-      if(Math.abs(dx)<6&&Math.abs(dy)<6)return;
-      isHoriz=Math.abs(dx)>Math.abs(dy);
+      if(Math.abs(dx)<8&&Math.abs(dy)<8)return;
+      isHoriz=Math.abs(dx)>Math.abs(dy)*1.5; // must be clearly horizontal
     }
     if(!isHoriz)return;
     e.preventDefault();
+    e.stopPropagation(); // stop screen swipe from triggering
     curX=dx;
     cardEl.style.transform=`translateX(${curX}px)`;
-    cardEl.style.opacity=1-Math.abs(curX)/220;
   }
-  function onEnd(){
+  function onEnd(e){
     if(!dragging||isHoriz===false){dragging=false;return;}
+    if(isHoriz) e.stopPropagation();
     dragging=false;
     cardEl.classList.add('snapping');
     const done=hLog(today(),hid).done;
     if(curX>THRESHOLD&&!done){
-      cardEl.style.transform='translateX(110%)';
-      cardEl.style.opacity='0';
-      setTimeout(()=>{togH(hid);},200);
+      // swipe right = mark done → slide off and hide from today
+      cardEl.style.transform='translateX(115%)';
+      setTimeout(()=>{
+        togH(hid);
+        // after togH triggers render, card is gone from today view
+      },220);
     } else if(curX<-THRESHOLD&&done){
-      cardEl.style.transform='translateX(-110%)';
-      cardEl.style.opacity='0';
-      setTimeout(()=>{togH(hid);},200);
+      // swipe left = undo done → slide off
+      cardEl.style.transform='translateX(-115%)';
+      setTimeout(()=>{ togH(hid); },220);
     } else {
       cardEl.style.transform='translateX(0)';
-      cardEl.style.opacity='1';
     }
     curX=0;
   }
  
   cardEl.addEventListener('touchstart',onStart,{passive:true});
   cardEl.addEventListener('touchmove',onMove,{passive:false});
-  cardEl.addEventListener('touchend',onEnd);
+  cardEl.addEventListener('touchend',onEnd,{passive:false});
   cardEl.addEventListener('mousedown',onStart);
   window.addEventListener('mousemove',onMove);
   window.addEventListener('mouseup',onEnd);
@@ -1249,7 +1263,8 @@ function rHabits(){
       tabContent+=`<div class="h-cards">`;
  
       // ungrouped habits first
-      const ungrouped=S.habits.filter(h=>!h.groupId);
+      // Today tab — only show habits not yet done (done ones disappear after swipe)
+      const ungrouped=S.habits.filter(h=>!h.groupId&&!hLog(d,h.id).done);
       for(const h of ungrouped){
         const log=hLog(d,h.id);
         tabContent+=habitCard(h,log);
@@ -1257,7 +1272,7 @@ function rHabits(){
  
       // then groups
       for(const g of (S.groups||[])){
-        const gHabits=S.habits.filter(h=>h.groupId===g.id);
+        const gHabits=S.habits.filter(h=>h.groupId===g.id&&!hLog(d,h.id).done);
         if(!gHabits.length)continue;
         const collapsed=collapsedGroups[g.id];
         const gDone=gHabits.filter(h=>hLog(d,h.id).done).length;
@@ -1272,6 +1287,7 @@ function rHabits(){
             <div id="grp-body-${g.id}" class="grp-body ${collapsed?'':'open expanded'}" style="
               background:var(--bg2);border:1px solid var(--border);border-top:none;
               border-radius:0 0 16px 16px;display:flex;flex-direction:column;gap:7px;
+              height:${collapsed?'0':'auto'};
             ">
               ${gHabits.map(h=>{
                 const log=hLog(d,h.id);
@@ -1533,14 +1549,15 @@ if('serviceWorker' in navigator){
   },{passive:true});
  
   app.addEventListener('touchmove',e=>{
+    // if touch started on a habit card, don't interfere
+    if(e.target.closest('.h-card')||e.target.closest('.h-card-wrap'))return;
     const dx=e.touches[0].clientX-tx;
     const dy=e.touches[0].clientY-ty;
     if(!locked){
-      if(Math.abs(dx)<8&&Math.abs(dy)<8)return;
-      locked=Math.abs(dx)>Math.abs(dy)?'h':'v';
+      if(Math.abs(dx)<10&&Math.abs(dy)<10)return;
+      locked=Math.abs(dx)>Math.abs(dy)*1.5?'h':'v';
     }
     if(locked==='h'){
-      // prevent scroll only if horizontal
       const idx=SCREENS.indexOf(cur);
       if((dx<0&&idx<SCREENS.length-1)||(dx>0&&idx>0)){
         e.preventDefault();
@@ -1553,15 +1570,15 @@ if('serviceWorker' in navigator){
     if(!swiping)return;
     const dx=e.changedTouches[0].clientX-tx;
     const HTABS=['today','weekly','overall'];
-    // if inside habits screen, swipe switches habit tabs first
+    const NAV_THRESHOLD=90; // higher = harder to accidentally switch screens
     if(cur==='habits'){
       const hidx=HTABS.indexOf(habitTab);
-      if(dx<-60&&hidx<HTABS.length-1){setHTab(HTABS[hidx+1]);swiping=false;locked=null;return;}
-      if(dx>60&&hidx>0){setHTab(HTABS[hidx-1]);swiping=false;locked=null;return;}
+      if(dx<-NAV_THRESHOLD&&hidx<HTABS.length-1){setHTab(HTABS[hidx+1]);swiping=false;locked=null;return;}
+      if(dx>NAV_THRESHOLD&&hidx>0){setHTab(HTABS[hidx-1]);swiping=false;locked=null;return;}
     }
     const idx=SCREENS.indexOf(cur);
-    if(dx<-60&&idx<SCREENS.length-1){nav(SCREENS[idx+1],'right');}
-    else if(dx>60&&idx>0){nav(SCREENS[idx-1],'left');}
+    if(dx<-NAV_THRESHOLD&&idx<SCREENS.length-1){nav(SCREENS[idx+1],'right');}
+    else if(dx>NAV_THRESHOLD&&idx>0){nav(SCREENS[idx-1],'left');}
     swiping=false;locked=null;
   },{passive:true});
 })();
