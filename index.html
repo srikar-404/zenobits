@@ -2,1808 +2,1260 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" id="theme-meta" content="#0a0a0a">
-<title>LifeOS</title>
+<meta name="theme-color" id="tc" content="#0a0a0a">
 <link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-title" content="LifeOS">
- 
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<title>LifeOS</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0a0a;--bg2:#111;--card:#1a1a1a;--surf:#242424;
-  --border:rgba(255,255,255,0.08);--text:#f5f5f5;--sub:#888;
-  --accent:#5eead4;--nav:64px;
-  --safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);
-  --r:20px;--rs:12px;
-  --f1:'DM Sans',sans-serif;--f2:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;
+  --bg:#0a0a0a;--card:#1a1a1a;--surf:#262626;--border:rgba(255,255,255,.08);
+  --text:#f5f5f5;--sub:#888;--accent:#5eead4;--red:#f87171;--yellow:#fbbf24;
+  --green:#4ade80;--blue:#60a5fa;--pink:#f472b6;--purple:#a78bfa;--orange:#fb923c;
+  --nav:64px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
+  --r:18px;--rs:12px;--f1:'DM Sans',sans-serif;--f2:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;
 }
 :root.light{
-  --bg:#f2f2f7;--bg2:#e8e8ed;--card:#ffffff;--surf:#efefef;
-  --border:rgba(0,0,0,0.06);--text:#0a0a0a;--sub:#888;
-  --accent:#7c3aed;
+  --bg:#f2f2f7;--card:#fff;--surf:#e8e8ed;--border:rgba(0,0,0,.07);
+  --text:#0a0a0a;--sub:#777;--accent:#7c3aed;--red:#dc2626;--yellow:#b45309;
+  --green:#16a34a;--blue:#2563eb;--pink:#be185d;--purple:#7c3aed;--orange:#ea580c;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{font-family:var(--f1);background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;transition:background .2s,color .2s}
-#app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;overflow:hidden;position:relative;isolation:isolate}
-.screen-wrap{
-  flex:1;overflow:hidden;position:relative;
-}
-.screen{
-  position:absolute;inset:0;
-  overflow-y:auto;overflow-x:hidden;
-  padding-bottom:calc(var(--nav) + var(--safe-b) + 16px);
-  scrollbar-width:none;
-  transform:translateX(105%);
-  transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
-  pointer-events:none;
-  background:var(--bg);
-  will-change:transform;
-}
-.screen::-webkit-scrollbar{display:none}
-.screen.active{
-  transform:translateX(0);
-  pointer-events:all;
-}
-.screen.slide-left{transform:translateX(-105%)}
-.screen.slide-right{transform:translateX(105%)}
-.screen.no-transition{transition:none !important}
-.screen::-webkit-scrollbar{display:none}
-.screen.active{display:block}
- 
-/* NAV */
-#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--nav) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;z-index:100;transition:background .2s}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative}
+.sw{flex:1;overflow:hidden;position:relative}
+.sc{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:calc(var(--nav)+var(--sb)+16px);scrollbar-width:none;transform:translateX(105%);transition:transform .28s cubic-bezier(.4,0,.2,1);pointer-events:none;background:var(--bg);will-change:transform}
+.sc::-webkit-scrollbar{display:none}
+.sc.active{transform:translateX(0);pointer-events:all}
+.sc.sl{transform:translateX(-105%)}
+.sc.no-t{transition:none!important}
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:calc(var(--nav)+var(--sb));padding-bottom:var(--sb);background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;z-index:100;transition:background .2s;contain:layout style}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:none;border:none;cursor:pointer;color:var(--sub);padding:6px 0;transition:color .15s}
 .nb svg{width:22px;height:22px;stroke-width:1.7}
 .nb span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;font-family:var(--f2)}
-.nb.active{color:var(--accent)}
-#fab{position:fixed;bottom:calc(var(--nav) + var(--safe-b) + 14px);right:max(16px,calc(50% - 215px + 16px));width:50px;height:50px;border-radius:50%;background:var(--accent);color:#03100e;border:none;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(94,234,212,.3);z-index:50;transition:transform .12s}
-:root.light #fab{color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.3)}
+.nb.on{color:var(--accent)}
+#pill{position:absolute;top:6px;height:calc(100%-14px-var(--sb));width:18%;left:1%;background:rgba(0,0,0,.4);border-radius:14px;border:1px solid rgba(255,255,255,.06);transition:left .3s cubic-bezier(.4,0,.2,1);pointer-events:none}
+:root.light #pill{background:rgba(0,0,0,.08)}
+#fab{position:absolute;bottom:calc(var(--nav) + var(--sb) + 12px);right:16px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#03100e;border:none;cursor:pointer;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(94,234,212,.35);z-index:150;transition:transform .12s}
+:root.light #fab{color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.3);background:var(--accent)}
 #fab:active{transform:scale(.9)}
- 
 /* HEADER */
-.hdr{padding:calc(var(--safe-t) + 44px) 20px 12px;background:var(--bg);position:sticky;top:0;z-index:20;transition:background .2s}
-.hdr-row{display:flex;align-items:center;justify-content:space-between}
-.hdr h1{font-family:var(--f2);font-size:28px;font-weight:800;letter-spacing:-.5px}
-.hdr-acts{display:flex;gap:8px;align-items:center}
-.tog{width:40px;height:22px;border-radius:100px;background:var(--surf);border:1px solid var(--border);cursor:pointer;position:relative;transition:all .2s;flex-shrink:0}
-.tog::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--sub);transition:all .2s}
-:root.light .tog::after{transform:translateX(18px);background:var(--accent)}
-.ib{width:34px;height:34px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
-.ib:active{transform:scale(.88)}
- 
-/* GENERIC */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--f1);font-size:14px;font-weight:700;transition:all .12s}
+.hdr{padding:calc(var(--st)+44px) 18px 12px;background:var(--bg);position:sticky;top:0;z-index:20;transition:background .2s}
+.hr{display:flex;align-items:flex-start;justify-content:space-between}
+.hdr h1{font-family:var(--f2);font-size:26px;font-weight:800;letter-spacing:-.3px}
+.hdr .sub{font-size:12px;color:var(--sub);margin-top:2px}
+.ha{display:flex;gap:7px;align-items:center;padding-top:3px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--f1);font-size:14px;font-weight:700;transition:all .12s}
 .bp{background:var(--accent);color:#03100e}.bp:active{opacity:.85;transform:scale(.97)}
 :root.light .bp{color:#fff}
 .bg{background:var(--surf);color:var(--text);border:1px solid var(--border)}.bg:active{transform:scale(.97)}
-input,select,textarea{font-family:var(--f1);background:var(--surf);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-size:15px;padding:11px 13px;width:100%;outline:none;transition:border-color .15s,background .2s;-webkit-appearance:none}
+.ib{width:32px;height:32px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}.ib:active{transform:scale(.88)}
+.tog{width:40px;height:22px;border-radius:100px;background:var(--surf);border:1px solid var(--border);cursor:pointer;position:relative;flex-shrink:0}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--sub);transition:all .2s}
+:root.light .tog::after{transform:translateX(18px);background:var(--accent)}
+/* INPUTS */
+input,select,textarea{font-family:var(--f1);background:var(--surf);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-size:15px;padding:10px 13px;width:100%;outline:none;transition:border-color .15s,background .2s;-webkit-appearance:none}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 input::placeholder,textarea::placeholder{color:var(--sub)}
 textarea{resize:none;min-height:80px;line-height:1.5}
 select option{background:var(--card)}
 .fl{margin-bottom:11px}.fl-lbl{display:block;font-size:11px;font-weight:700;color:var(--sub);margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
-.pb{background:var(--surf);border-radius:100px;overflow:hidden}
-.pbf{height:100%;border-radius:100px;transition:width .4s ease}
- 
 /* MODAL */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .ov.open{display:flex}
-.modal{background:var(--card);border-radius:24px 24px 0 0;padding:14px 20px calc(20px + var(--safe-b));width:100%;max-width:430px;max-height:92dvh;overflow-y:auto;scrollbar-width:none;animation:sUp .26s cubic-bezier(.34,1.15,.64,1);transition:background .2s}
+.modal{background:var(--card);border-radius:22px 22px 0 0;padding:14px 20px calc(20px + var(--sb));width:100%;max-width:430px;max-height:90dvh;overflow-y:auto;scrollbar-width:none;animation:sUp .26s cubic-bezier(.34,1.15,.64,1);transition:background .2s}
 .modal::-webkit-scrollbar{display:none}
 @keyframes sUp{from{transform:translateY(100%);opacity:.4}to{transform:translateY(0);opacity:1}}
-.m-handle{width:36px;height:4px;background:var(--surf);border-radius:2px;margin:0 auto 18px}
-.m-title{font-family:var(--f2);font-size:20px;font-weight:800;margin-bottom:16px}
-.sw-row{display:flex;gap:10px;flex-wrap:wrap}
-.sw{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .12s}
-.sw.sel{border-color:var(--text);transform:scale(1.2)}
-#toast{position:fixed;bottom:calc(var(--nav) + var(--safe-b) + 16px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);padding:8px 20px;border-radius:100px;font-size:13px;font-weight:700;opacity:0;transition:all .22s;pointer-events:none;white-space:nowrap;z-index:9999}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
+.mh{width:34px;height:4px;background:var(--surf);border-radius:2px;margin:0 auto 16px}
+.mt{font-family:var(--f2);font-size:20px;font-weight:800;margin-bottom:16px}
+/* MISC */
+.pb{background:var(--surf);border-radius:100px;overflow:hidden}.pbf{height:100%;border-radius:100px;transition:width .4s}
+.sl-lbl{font-family:var(--f2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--sub);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+#toast{position:fixed;bottom:calc(var(--nav)+var(--sb)+74px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:100px;font-size:13px;font-weight:700;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;white-space:nowrap;z-index:9999;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;cursor:default}
  
 .spin{width:20px;height:20px;border:2px solid var(--surf);border-top-color:var(--accent);border-radius:50%;animation:rot .7s linear infinite;margin:14px auto}
 @keyframes rot{to{transform:rotate(360deg)}}
-.empty-s{text-align:center;padding:50px 20px;color:var(--sub)}
-.empty-s .ei{font-size:40px;margin-bottom:10px}
-.empty-s p{font-size:13px;line-height:1.6}
- 
-/* ══════════════ HABITS SCREEN ══════════════ */
-.h-tabs{display:flex;gap:4px;margin:12px 20px 0;background:var(--surf);border-radius:14px;padding:4px}
-.h-tab{flex:1;padding:8px 0;border:none;border-radius:10px;background:none;color:var(--sub);font-family:var(--f1);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
-.h-tab.active{color:var(--text)}
- 
-.h-status{padding:10px 20px 14px;display:flex;flex-direction:column;gap:6px}
-.h-progress-bar{height:4px;background:var(--surf);border-radius:100px;overflow:hidden}
-.h-progress-fill{height:100%;border-radius:100px;background:var(--accent);transition:width .4s ease}
-.h-done-count{font-size:13px;color:#e55;font-weight:600}
-.h-done-count.all{color:var(--accent)}
- 
-/* SWIPE CARDS */
-.h-cards{padding:0 16px;display:flex;flex-direction:column;gap:10px}
-.h-card-wrap{position:relative;border-radius:var(--r);overflow:hidden;height:72px;flex-shrink:0}
-.h-card-bg{
-  position:absolute;inset:0;border-radius:var(--r);
-  display:flex;align-items:center;
-}
-.h-card-bg-left{justify-content:flex-start;padding-left:22px;background:rgba(74,222,128,.25)}
-.h-card-bg-right{justify-content:flex-end;padding-right:22px;background:rgba(248,113,113,.2)}
-.h-card-bg svg{opacity:.9}
-.h-card{
-  position:absolute;inset:0;border-radius:var(--r);
-  display:flex;align-items:center;padding:0 20px;gap:14px;
-  cursor:pointer;
-  touch-action:pan-y;
-  user-select:none;-webkit-user-select:none;
-  will-change:transform;
-  transition:box-shadow .2s;
-}
-.h-card.snapping{transition:transform .25s cubic-bezier(.34,1.2,.64,1)}
-.h-card-emoji{font-size:22px;flex-shrink:0;line-height:1}
-.h-card-name{flex:1;font-size:17px;font-weight:700;color:#fff;line-height:1.2}
-.h-card.done .h-card-name{opacity:.6}
-.h-card-streak{font-family:var(--fm);font-size:12px;color:rgba(255,255,255,.6);flex-shrink:0}
-.h-card-check{
-  width:26px;height:26px;border-radius:50%;flex-shrink:0;
-  border:2px solid rgba(255,255,255,.3);
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;
-}
-.h-card.done .h-card-check{background:rgba(255,255,255,.9);border-color:transparent}
- 
-/* WEEKLY / OVERALL VIEW */
-.h-weekly-wrap{padding:0 16px;display:flex;flex-direction:column;gap:10px}
-.hw-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
-.hw-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border)}
-.hw-color{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.hw-name{flex:1;font-size:15px;font-weight:700}
-.hw-streak{font-family:var(--fm);font-size:12px;color:var(--sub)}
-.hw-days{display:flex;gap:0;padding:12px 16px;justify-content:space-between}
-.hwd{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
-.hwd-lbl{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--sub)}
-.hwd-lbl.today{color:var(--accent)}
-.hwd-dot{
-  width:32px;height:32px;border-radius:50%;
-  background:var(--surf);border:1.5px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .15s;font-size:13px;
-}
-.hwd-dot.done{border-color:transparent}
-.hwd-dot.today-ring{box-shadow:0 0 0 2px var(--accent)}
-.hwd-dot.future{opacity:.3;cursor:default;pointer-events:none}
-.hwd-dot:not(.future):active{transform:scale(.85)}
-.hw-note{padding:0 16px 12px;font-size:12px;color:var(--sub);border-top:1px solid var(--border);padding-top:10px}
-.hw-note-empty{font-style:italic;opacity:.5}
-.hw-note-btn{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--sub);font-size:12px;padding:8px 16px;border-top:1px solid var(--border);background:none;width:100%;text-align:left;font-family:var(--f1)}
- 
-/* OVERALL VIEW */
-.ho-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:14px 16px;display:flex;align-items:center;gap:12px}
-.ho-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.ho-info{flex:1;min-width:0}
-.ho-name{font-size:14px;font-weight:700;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ho-pb-wrap{display:flex;align-items:center;gap:8px}
-.ho-pb{flex:1;height:5px;border-radius:100px;background:var(--surf);overflow:hidden}
-.ho-pbf{height:100%;border-radius:100px;transition:width .4s}
-.ho-pct{font-family:var(--fm);font-size:11px;color:var(--sub);min-width:28px;text-align:right}
-.ho-streak{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--sub);min-width:34px;text-align:right}
- 
-/* TODAY SCREEN */
-.t-cal{margin:0 16px 11px;background:var(--card);border-radius:var(--r);padding:18px;border:1px solid var(--border)}
-.ring-row{display:flex;align-items:center;gap:18px;margin-bottom:14px}
-.rw{position:relative;width:96px;height:96px;flex-shrink:0}
-.rw svg{transform:rotate(-90deg)}
-.ri{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.ri-pct{font-family:var(--fm);font-size:17px;font-weight:600;line-height:1}
-.ri-lbl{font-size:9px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:1px}
-.ms-row{display:flex;gap:7px}
-.ms{flex:1;background:var(--surf);border-radius:10px;padding:9px 5px;text-align:center}
-.ms-v{font-family:var(--fm);font-size:13px;font-weight:600}
-.ms-l{font-size:9px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
-.t-hcard{margin:0 16px 11px;background:var(--card);border-radius:var(--r);padding:16px;border:1px solid var(--border)}
-.sec-lbl{font-family:var(--f2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--sub);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.th{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-.th:last-child{border-bottom:none;padding-bottom:0}
-.thck{width:30px;height:30px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .15s}
-.thck.done{border-color:transparent}
-.th-n{flex:1;font-size:14px;font-weight:600;transition:all .15s}
-.th-n.done{opacity:.4;text-decoration:line-through}
-.wcard{margin:0 16px 11px;background:var(--card);border-radius:var(--r);padding:16px;border:1px solid var(--border)}
-.wgg{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 12px}
-.wg{width:34px;height:34px;border-radius:8px;background:var(--surf);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .13s}
-.wg.on{background:rgba(96,165,250,.15);border-color:#60a5fa}
-.wg:active{transform:scale(.86)}
- 
-/* CALORIES */
-.ls-hero{margin:0 16px 11px;background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:18px 16px 14px}
-.ls-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
-.ls-top h2{font-family:var(--f2);font-size:22px;font-weight:800;line-height:1}
-.ls-top .s2{font-size:12px;color:var(--sub);margin-top:3px}
-.ls-badge{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-size:20px;font-weight:800}
-.ls-rings{display:flex;gap:10px;justify-content:space-around;margin-bottom:14px}
-.lsr{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
-.lsr-v{font-family:var(--fm);font-size:13px;font-weight:600}
-.lsr-l{font-size:10px;color:var(--sub);font-weight:600}
-.ls-bar-top{display:flex;justify-content:space-between;margin-bottom:5px}
-.ls-bar-top span{font-size:11px;color:var(--sub)}
-.ls-bar-top strong{font-family:var(--fm);font-size:11px}
-.meal-sec{margin:0 16px 10px}
+.es{text-align:center;padding:40px 20px;color:var(--sub)}.es .ei{font-size:38px;margin-bottom:10px}.es p{font-size:13px;line-height:1.6}
+/* SWATCHES */
+.sw-row{display:flex;gap:9px;flex-wrap:wrap}
+.sw-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .12s}
+.sw-dot.sel{border-color:var(--text);transform:scale(1.2)}
+/* DAY BUTTONS */
+.day-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--surf);color:var(--sub);font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;font-family:var(--f2)}
+.day-btn.on{background:var(--accent);border-color:var(--accent);color:#03100e}
+:root.light .day-btn.on{color:#fff}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin:0 16px 12px;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+/* HABIT SWIPE */
+.hcw{position:relative;border-radius:var(--r);overflow:hidden;height:72px;flex-shrink:0;touch-action:pan-y}
+.hcbg{position:absolute;inset:0;border-radius:var(--r);display:flex;align-items:center}
+.hcbg.L{justify-content:flex-start;padding-left:20px;background:rgba(74,222,128,.2)}
+.hcbg.R{justify-content:flex-end;padding-right:20px;background:rgba(248,113,113,.2)}
+.hcard{position:absolute;inset:0;border-radius:var(--r);display:flex;align-items:center;padding:0 18px;gap:12px;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform;transform:translateZ(0);-webkit-backface-visibility:hidden}
+.hcard.snap{transition:transform .2s cubic-bezier(.25,.46,.45,.94)}
+.hcard .ck{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.hcard.done .ck{background:rgba(255,255,255,.9);border-color:transparent}
+.hcard .nm{flex:1;font-size:16px;font-weight:700;color:#fff;line-height:1.2;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hcard.done .nm{opacity:.55}
+.hcard .st{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.6);flex-shrink:0}
+/* GROUP */
+.grp-hdr{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:1px solid var(--border);cursor:pointer;user-select:none;-webkit-user-select:none;transition:background .15s}
+.grp-hdr:active{background:var(--surf)}
+.grp-chev{font-size:11px;color:var(--sub);display:inline-block;transition:transform .28s cubic-bezier(.4,0,.2,1);flex-shrink:0}
+.grp-body{overflow:hidden;height:0;padding-top:0!important;padding-bottom:0!important;transition:height .28s cubic-bezier(.4,0,.2,1)}
+/* FOOD MODAL */
+.fli{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--surf);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:7px;cursor:pointer;transition:all .12s}
+.fli:active{border-color:var(--accent);transform:scale(.98)}
+.fli-n{font-size:13px;font-weight:700}
+.fli-m{font-size:11px;color:var(--sub);margin-top:2px}
+.fls{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--sub);margin:12px 0 6px}
+/* MEAL */
 .meal-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r) var(--r) 0 0}
 .meal-hdr.empty{border-radius:var(--r)}
-.mhl{display:flex;align-items:center;gap:9px}
-.meal-ico{font-size:18px}
-.meal-ttl{font-family:var(--f2);font-size:13px;font-weight:700}
-.meal-cal-sub{font-family:var(--fm);font-size:11px;color:var(--sub)}
-.meal-add{width:26px;height:26px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .12s}
-.meal-add:active{background:var(--accent);color:#03100e}
-:root.light .meal-add:active{color:#fff}
 .meal-body{background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);overflow:hidden}
 .fi{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
 .fi:last-child{border-bottom:none}
-.fi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.fi-info{flex:1;min-width:0}
-.fi-n{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fi-m{font-size:11px;color:var(--sub);margin-top:2px}
-.fi-cal{font-family:var(--fm);font-size:13px;font-weight:600;flex-shrink:0}
-.fi-del{width:26px;height:26px;border-radius:50%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);transition:color .12s;flex-shrink:0}
-.fi-del:active{color:#f87171}
-.sr-item{padding:10px 12px;background:var(--surf);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;transition:all .12s}
-.sr-item:active{border-color:var(--accent);transform:scale(.98)}
-.sr-n{font-size:13px;font-weight:700}.sr-m{font-size:11px;color:var(--sub);margin-top:2px}
-.or-div{text-align:center;font-size:11px;color:var(--sub);margin:8px 0 10px;position:relative}
-.or-div::before,.or-div::after{content:'';position:absolute;top:50%;width:36%;height:1px;background:var(--border)}
-.or-div::before{left:0}.or-div::after{right:0}
-.si-wrap{flex:1;position:relative;display:flex;align-items:center}
-.si-wrap svg{position:absolute;left:11px;width:15px;height:15px;stroke:var(--sub);stroke-width:2;pointer-events:none}
-.si-wrap input{padding-left:34px;background:var(--card)}
- 
-/* ANALYTICS */
-.st-g{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px 10px}
-.st-c{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 12px;text-align:center}
-.st-v{font-family:var(--fm);font-size:28px;font-weight:600;color:var(--accent);line-height:1}
-.st-l{font-size:10px;color:var(--sub);margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.ana-c{margin:0 16px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px}
-.bchart{display:flex;align-items:flex-end;gap:5px;height:80px;padding-bottom:2px}
-.bc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
-.bc-wr{flex:1;display:flex;align-items:flex-end;width:100%}
-.bc-b{width:100%;border-radius:5px 5px 0 0;min-height:3px}
-.bc-l{font-size:9px;color:var(--sub);font-weight:700}
-.ha-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-.ha-row:last-child{border-bottom:none;padding-bottom:0}
- 
-.fm-sec-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--sub);margin:14px 0 7px;padding:0 2px}
-.fli{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--surf);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:7px;cursor:pointer;transition:all .12s}
-.fli:active{border-color:var(--accent);transform:scale(.98)}
-.fli-info{flex:1;min-width:0}
-.fli-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fli-meta{font-size:11px;color:var(--sub);margin-top:2px}
-.fav-btn{background:none;border:none;cursor:pointer;font-size:18px;flex-shrink:0;padding:2px 4px;line-height:1}
-.fd-macro-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
- 
-/* Group collapse animation */
-.grp-header{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 16px;
-  background:var(--card);border:1px solid var(--border);
-  cursor:pointer;
-  user-select:none;-webkit-user-select:none;
-  transition:background 0.2s;
-}
-.grp-header:active{background:var(--surf)}
-.grp-chevron{
-  font-size:12px;color:var(--sub);
-  transition:transform 0.45s cubic-bezier(0.22,1,0.36,1);
-  display:inline-block;flex-shrink:0;
-}
-.grp-chevron.open{transform:rotate(90deg)}
-.grp-body{
-  overflow:hidden;
-  height:0;
-  padding-top:0 !important;
-  padding-bottom:0 !important;
-  transition:height 0.28s cubic-bezier(0.25,0.46,0.45,0.94),
-             padding 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
-}
-.grp-body.expanded{
-  padding-top:8px !important;
-  padding-bottom:8px !important;
-}
+/* TODO */
+.todo-card{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;transition:all .15s}
 </style>
 </head>
 <body>
 <div id="app">
-  <div class="screen-wrap">
-    <div id="s-today" class="screen active"></div>
-    <div id="s-habits" class="screen"></div>
-    <div id="s-calories" class="screen"></div>
-    <div id="s-todo" class="screen"></div>
-    <div id="s-analytics" class="screen"></div>
+  <div class="sw">
+    <div id="s0" class="sc active"></div>
+    <div id="s1" class="sc"></div>
+    <div id="s2" class="sc"></div>
+    <div id="s3" class="sc"></div>
+    <div id="s4" class="sc"></div>
   </div>
   <button id="fab" onclick="openFab()">+</button>
-  <nav id="nav" style="position:relative">
-    <div id="nav-pill" style="
-      position:absolute;
-      top:4px;
-      height:calc(100% - 10px - var(--safe-b));
-      width:18%;
-      left:1%;
-      background:rgba(0,0,0,0.45);
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,0.06);
-      transition:left 0.3s cubic-bezier(0.4,0,0.2,1);
-      pointer-events:none;
-    "></div>
-    <button class="nb active" data-s="today" onclick="nav('today')">
+  <nav id="nav">
+    <div id="pill"></div>
+    <button class="nb on" data-i="0" onclick="nav(0)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
       <span>Today</span>
     </button>
-    <button class="nb" data-s="habits" onclick="nav('habits')">
+    <button class="nb" data-i="1" onclick="nav(1)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       <span>Habits</span>
     </button>
-    <button class="nb" data-s="calories" onclick="nav('calories')">
+    <button class="nb" data-i="2" onclick="nav(2)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
       <span>Calories</span>
     </button>
-    <button class="nb" data-s="todo" onclick="nav('todo')">
+    <button class="nb" data-i="3" onclick="nav(3)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
       <span>Todo</span>
     </button>
-    <button class="nb" data-s="analytics" onclick="nav('analytics')">
+    <button class="nb" data-i="4" onclick="nav(4)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>Stats</span>
     </button>
   </nav>
 </div>
- 
-<!-- HAB CHOICE -->
-<div class="ov" id="m-hab-choice">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title">What to add?</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn bg" style="width:100%;padding:16px;justify-content:flex-start;gap:12px" onclick="closeM('m-hab-choice');openHabitModal('')">
-        <span style="font-size:22px">✅</span>
-        <div style="text-align:left"><div style="font-weight:700">Add Habit</div><div style="font-size:12px;color:var(--sub);margin-top:2px">Track a daily habit</div></div>
-      </button>
-      <button class="btn bg" style="width:100%;padding:16px;justify-content:flex-start;gap:12px" onclick="closeM('m-hab-choice');openM('m-group')">
-        <span style="font-size:22px">📁</span>
-        <div style="text-align:left"><div style="font-weight:700">Create Group</div><div style="font-size:12px;color:var(--sub);margin-top:2px">Group similar habits together</div></div>
-      </button>
-    </div>
+<!-- MODALS -->
+<div class="ov" id="m-hchoice"><div class="modal"><div class="mh"></div><div class="mt">Add to Habits</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <button class="btn bg" style="width:100%;padding:15px;justify-content:flex-start;gap:12px" onclick="closeM('m-hchoice');openM('m-habit')"><span style="font-size:20px">✅</span><div style="text-align:left"><div style="font-weight:700">Add Habit</div><div style="font-size:12px;color:var(--sub);margin-top:2px">Track a daily habit</div></div></button>
+    <button class="btn bg" style="width:100%;padding:15px;justify-content:flex-start;gap:12px" onclick="closeM('m-hchoice');openM('m-hgroup')"><span style="font-size:20px">📁</span><div style="text-align:left"><div style="font-weight:700">Create Group</div><div style="font-size:12px;color:var(--sub);margin-top:2px">Group similar habits</div></div></button>
   </div>
-</div>
- 
-<!-- ADD GROUP -->
-<div class="ov" id="m-group">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title">New Group</div>
-    <div class="fl"><label class="fl-lbl">Group Name</label><input id="g-name" placeholder="e.g. 💪 Fitness, 🧘 Wellness" maxlength="40"></div>
-    <div style="display:flex;gap:9px;margin-top:4px">
-      <button class="btn bg" style="flex:1" onclick="closeM('m-group')">Cancel</button>
-      <button class="btn bp" style="flex:1" onclick="saveGroup()">Next →</button>
-    </div>
+</div></div>
+<div class="ov" id="m-habit"><div class="modal"><div class="mh"></div><div class="mt">New Habit</div>
+  <div class="fl"><label class="fl-lbl">Name (add emoji!)</label><input id="h-name" placeholder="🏃 Morning run" maxlength="40"></div>
+  <div class="fl"><label class="fl-lbl">Color</label><div class="sw-row" id="sw-row"></div></div>
+  <div class="fl"><label class="fl-lbl">Repeat on</label><div id="day-sel" style="display:flex;gap:6px;flex-wrap:wrap"></div></div>
+  <div class="fl"><label class="fl-lbl">Add to Group (optional)</label><select id="h-gsel"><option value="">— No group —</option></select></div>
+  <div style="display:flex;gap:9px;margin-top:4px">
+    <button class="btn bg" style="flex:1" onclick="closeM('m-habit')">Cancel</button>
+    <button class="btn bp" style="flex:1" onclick="saveHabit()">Add</button>
   </div>
-</div>
- 
-<!-- ADD HABIT TO GROUP (step 2 after group creation) -->
-<div class="ov" id="m-group-habits" style="z-index:250">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <div style="font-size:20px">📁</div>
-      <div>
-        <div id="gh-group-name" style="font-family:var(--f2);font-size:18px;font-weight:800"></div>
-        <div style="font-size:11px;color:var(--sub);margin-top:1px">Add habits to this group</div>
-      </div>
-    </div>
-    <div id="gh-list" style="margin:12px 0;display:flex;flex-direction:column;gap:7px;max-height:200px;overflow-y:auto"></div>
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <input id="gh-input" placeholder="Habit name e.g. 🏃 Morning run" maxlength="40" style="flex:1" onkeydown="if(event.key==='Enter')addHabitToNewGroup()">
-      <button class="btn bp" onclick="addHabitToNewGroup()" style="padding:11px 14px;flex-shrink:0">Add</button>
-    </div>
-    <div class="fl"><label class="fl-lbl">Card Color</label><div class="sw-row" id="sw-row-gh"></div></div>
-    <button class="btn bp" style="width:100%;margin-top:4px" onclick="closeM('m-group-habits');render()">Done ✓</button>
+</div></div>
+<div class="ov" id="m-hgroup"><div class="modal"><div class="mh"></div><div class="mt">New Group</div>
+  <div class="fl"><label class="fl-lbl">Group Name</label><input id="hg-name" placeholder="💪 Fitness, 🧘 Wellness…" maxlength="40"></div>
+  <div style="display:flex;gap:9px"><button class="btn bg" style="flex:1" onclick="closeM('m-hgroup')">Cancel</button><button class="btn bp" style="flex:1" onclick="saveHGroup()">Next →</button></div>
+</div></div>
+<div class="ov" id="m-hgroup2" style="z-index:250"><div class="modal"><div class="mh"></div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div style="font-size:20px">📁</div>
+    <div><div id="hg2-title" style="font-family:var(--f2);font-size:17px;font-weight:800"></div><div style="font-size:11px;color:var(--sub);margin-top:2px">Add habits to this group</div></div>
   </div>
-</div>
- 
-<!-- ADD HABIT -->
-<div class="ov" id="m-habit">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title">New Habit</div>
-    <div class="fl"><label class="fl-lbl">Name (add emoji at start!)</label><input id="h-name" placeholder="🏃 Morning run" maxlength="40"></div>
-    <div class="fl"><label class="fl-lbl">Card Color</label><div class="sw-row" id="sw-row"></div></div>
-    <div class="fl">
-      <label class="fl-lbl">Add to Group (optional)</label>
-      <select id="h-group-sel"><option value="">— No group —</option></select>
-    </div>
-    <div style="display:flex;gap:9px;margin-top:4px">
-      <button class="btn bg" style="flex:1" onclick="closeM('m-habit')">Cancel</button>
-      <button class="btn bp" style="flex:1" onclick="saveHabit()">Add Habit</button>
-    </div>
+  <div id="hg2-list" style="margin-bottom:10px;display:flex;flex-direction:column;gap:7px;max-height:180px;overflow-y:auto"></div>
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+    <input id="hg2-inp" placeholder="Habit name e.g. 🏃 Run" maxlength="40" style="flex:1" onkeydown="if(event.key==='Enter')addHToGroup()">
+    <button class="btn bp" onclick="addHToGroup()" style="padding:10px 14px;flex-shrink:0">Add</button>
   </div>
-</div>
- 
-<!-- ADD FOOD -->
-<div class="ov" id="m-food">
-  <div class="modal" style="max-height:85dvh">
-    <div class="m-handle"></div>
-    <div style="display:flex;gap:8px;margin-bottom:6px">
-      <div class="si-wrap" style="flex:1">
-        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="f-search" placeholder="Search food…" oninput="onFSearch()" onkeydown="if(event.key==='Enter')doSearch()">
-      </div>
-      <button class="btn bg" onclick="doSearch()" style="padding:11px 13px;flex-shrink:0">Go</button>
-    </div>
-    <div id="fm-body"></div>
+  <div class="fl"><label class="fl-lbl">Color</label><div class="sw-row" id="sw-row2"></div></div>
+  <button class="btn bp" style="width:100%" onclick="closeM('m-hgroup2');render()">Done ✓</button>
+</div></div>
+<div class="ov" id="m-hnote" style="z-index:250"><div class="modal"><div class="mh"></div>
+  <div id="hn-title" style="font-family:var(--f2);font-size:18px;font-weight:800;margin-bottom:4px"></div>
+  <div id="hn-date" style="font-size:11px;color:var(--sub);margin-bottom:12px"></div>
+  <div class="fl"><label class="fl-lbl">Note</label><textarea id="hn-inp" placeholder="How did it go?"></textarea></div>
+  <div style="display:flex;gap:9px;margin-bottom:8px">
+    <button class="btn bg" style="flex:1" onclick="closeM('m-hnote')">Cancel</button>
+    <button class="btn bp" style="flex:1" onclick="saveNote()">Save</button>
   </div>
-</div>
- 
-<!-- FOOD DETAIL -->
-<div class="ov" id="m-fdetail" style="z-index:250">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:8px">
-      <div style="flex:1">
-        <div id="fd-name" style="font-family:var(--f2);font-size:17px;font-weight:800;line-height:1.3"></div>
-        <div id="fd-source" style="font-size:11px;color:var(--sub);margin-top:3px"></div>
-      </div>
-      <button class="fav-btn" id="fd-fav-btn" onclick="toggleFav()">🤍</button>
+  <div style="display:flex;gap:9px;margin-top:6px">
+    <button onclick="openEditHabit(noteHid)" style="flex:1;padding:10px;background:none;border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-size:13px;font-weight:700;cursor:pointer">✏️ Edit</button>
+    <button onclick="delHabit(noteHid)" style="flex:1;padding:10px;background:none;border:1px solid rgba(248,113,113,.3);border-radius:var(--rs);color:var(--red);font-size:13px;font-weight:700;cursor:pointer">🗑️ Delete</button>
+  </div>
+</div></div>
+<div class="ov" id="m-food"><div class="modal" style="max-height:85dvh"><div class="mh"></div>
+  <div style="display:flex;gap:8px;margin-bottom:6px">
+    <div style="flex:1;position:relative;display:flex;align-items:center">
+      <svg style="position:absolute;left:11px;width:15px;height:15px;stroke:var(--sub);stroke-width:2;pointer-events:none" viewBox="0 0 24 24" fill="none" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="f-search" style="padding-left:34px" placeholder="Search food…" oninput="onFSearch()" onkeydown="if(event.key==='Enter')doSearch()">
     </div>
-    <div style="display:flex;gap:9px;margin-bottom:11px">
-      <div style="flex:1">
-        <label class="fl-lbl">Quantity</label>
-        <input type="number" id="fd-qty" value="1" min="0.1" step="any"
-          style="font-size:18px;font-weight:700;text-align:center" oninput="updateFoodDetail()">
-      </div>
-      <div style="flex:2">
-        <label class="fl-lbl">Unit</label>
-        <select id="fd-unit" onchange="updateFoodDetail()">
-          <option value="serving">serving(s)</option>
-          <option value="piece">piece(s)</option>
-          <option value="g">g</option>
-          <option value="ml">ml</option>
-          <option value="cup">cup(s)</option>
-          <option value="bowl">bowl(s)</option>
-          <option value="plate">plate(s)</option>
-          <option value="glass">glass(es)</option>
-          <option value="tbsp">tbsp</option>
-          <option value="tsp">tsp</option>
-          <option value="slice">slice(s)</option>
-          <option value="scoop">scoop(s)</option>
-        </select>
-      </div>
-    </div>
-    <div class="fl">
-      <label class="fl-lbl">Meal</label>
-      <select id="fd-meal">
-        <option value="breakfast">🌅 Breakfast</option>
-        <option value="lunch">☀️ Lunch</option>
-        <option value="dinner">🌙 Dinner</option>
-        <option value="snacks">🍎 Snacks</option>
+    <button class="btn bg" onclick="doSearch()" style="padding:10px 13px;flex-shrink:0">Go</button>
+  </div>
+  <div id="fm-body"></div>
+</div></div>
+<div class="ov" id="m-fdetail" style="z-index:250"><div class="modal"><div class="mh"></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:8px">
+    <div style="flex:1"><div id="fd-name" style="font-family:var(--f2);font-size:17px;font-weight:800;line-height:1.2"></div><div id="fd-src" style="font-size:11px;color:var(--sub);margin-top:3px"></div></div>
+    <button id="fd-fav" onclick="toggleFav()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:0">🤍</button>
+  </div>
+  <div style="display:flex;gap:9px;margin-bottom:11px">
+    <div style="flex:1"><label class="fl-lbl">Quantity</label><input type="number" id="fd-qty" value="1" min="0.1" step="any" style="font-size:17px;font-weight:700;text-align:center" oninput="updateFD()"></div>
+    <div style="flex:2"><label class="fl-lbl">Unit</label>
+      <select id="fd-unit" onchange="updateFD()">
+        <option value="serving">serving(s)</option><option value="piece">piece(s)</option><option value="g">g</option><option value="ml">ml</option><option value="cup">cup(s)</option><option value="bowl">bowl(s)</option><option value="plate">plate(s)</option><option value="glass">glass</option><option value="tbsp">tbsp</option><option value="tsp">tsp</option><option value="slice">slice(s)</option><option value="scoop">scoop(s)</option>
       </select>
     </div>
-    <div style="text-align:center;padding:12px 0 6px">
-      <span style="font-size:13px">🔥</span>
-      <span id="fd-cal-num" style="font-family:var(--fm);font-size:32px;font-weight:600;color:var(--accent)">0</span>
-      <span style="font-size:13px;color:var(--sub)"> kcal</span>
-    </div>
-    <div id="fd-rings" style="display:flex;gap:8px;justify-content:space-around;background:var(--surf);border-radius:14px;padding:14px 8px;margin-bottom:11px"></div>
-    <div id="fd-macrovals" style="display:flex;gap:7px;margin-bottom:14px"></div>
-    <div id="fd-manual" style="display:none">
-      <div class="fl"><label class="fl-lbl">Food Name</label><input id="fd-manname" placeholder="e.g. Dal rice, 1 bowl"></div>
-      <div class="g2">
-        <div><label class="fl-lbl">Cal / unit</label><input type="number" id="fd-cal" placeholder="0" min="0" oninput="updateFoodDetail()"></div>
-        <div><label class="fl-lbl">Carbs (g)</label><input type="number" id="fd-carb" placeholder="0" min="0" step="0.1" oninput="updateFoodDetail()"></div>
-        <div><label class="fl-lbl">Protein (g)</label><input type="number" id="fd-prot" placeholder="0" min="0" step="0.1" oninput="updateFoodDetail()"></div>
-        <div><label class="fl-lbl">Fat (g)</label><input type="number" id="fd-fat" placeholder="0" min="0" step="0.1" oninput="updateFoodDetail()"></div>
-      </div>
-    </div>
-    <button class="btn bp" style="width:100%;padding:14px;font-size:15px;letter-spacing:.5px" onclick="trackFood()">TRACK</button>
   </div>
-</div>
- 
-<!-- HABIT WEEKLY DETAIL -->
-<div class="ov" id="m-week">
-  <div class="modal" id="m-week-inner">
-    <div class="m-handle"></div>
-    <div id="week-content"></div>
+  <div class="fl"><label class="fl-lbl">Meal</label>
+    <select id="fd-meal"><option value="breakfast">🌅 Breakfast</option><option value="lunch">☀️ Lunch</option><option value="dinner">🌙 Dinner</option><option value="snacks">🍎 Snacks</option></select>
   </div>
-</div>
- 
-<!-- NOTE MODAL -->
-<div class="ov" id="m-note" style="z-index:300">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title" id="note-title">Note</div>
-    <div style="font-size:12px;color:var(--sub);margin-bottom:10px" id="note-date-lbl"></div>
-    <div class="fl"><label class="fl-lbl">Note</label><textarea id="note-inp" placeholder="How did it go?"></textarea></div>
-    <div style="display:flex;gap:9px">
-      <button class="btn bg" style="flex:1" onclick="closeM('m-note')">Cancel</button>
-      <button class="btn bp" style="flex:1" onclick="saveNote()">Save</button>
+  <div style="text-align:center;padding:10px 0 6px">🔥 <span id="fd-cal" style="font-family:var(--fm);font-size:30px;font-weight:600;color:var(--accent)">0</span> <span style="font-size:12px;color:var(--sub)">kcal</span></div>
+  <div id="fd-rings" style="display:flex;justify-content:space-around;background:var(--surf);border-radius:14px;padding:14px 8px;margin-bottom:12px"></div>
+  <div id="fd-manual" style="display:none">
+    <div class="fl"><label class="fl-lbl">Food Name</label><input id="fd-mname" placeholder="e.g. Dal rice, 1 bowl"></div>
+    <div class="g2">
+      <div><label class="fl-lbl">Cal / unit</label><input type="number" id="fd-mcal" placeholder="0" oninput="updateFD()"></div>
+      <div><label class="fl-lbl">Carbs (g)</label><input type="number" id="fd-mcarb" placeholder="0" oninput="updateFD()"></div>
+      <div><label class="fl-lbl">Protein (g)</label><input type="number" id="fd-mprot" placeholder="0" oninput="updateFD()"></div>
+      <div><label class="fl-lbl">Fat (g)</label><input type="number" id="fd-mfat" placeholder="0" oninput="updateFD()"></div>
     </div>
   </div>
-</div>
- 
-<!-- SETTINGS -->
-<div class="ov" id="m-set">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title">Daily Goals</div>
-    <div class="fl"><label class="fl-lbl">Calorie Goal (kcal)</label><input type="number" id="s-cal" min="500" max="5000"></div>
-    <div class="fl"><label class="fl-lbl">Water Goal (glasses)</label><input type="number" id="s-water" min="1" max="20"></div>
-    <button class="btn bp" style="width:100%" onclick="saveSets()">Save Goals</button>
+  <button class="btn bp" style="width:100%;padding:13px;font-size:15px;letter-spacing:.4px" onclick="trackFood()">TRACK</button>
+</div></div>
+<div class="ov" id="m-tchoice"><div class="modal"><div class="mh"></div><div class="mt">Add to Todo</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <button class="btn bg" style="width:100%;padding:15px;justify-content:flex-start;gap:12px" onclick="closeM('m-tchoice');openTodoItem(null)"><span style="font-size:20px">✅</span><div style="text-align:left"><div style="font-weight:700">Add Task</div><div style="font-size:12px;color:var(--sub);margin-top:2px">A single to-do item</div></div></button>
+    <button class="btn bg" style="width:100%;padding:15px;justify-content:flex-start;gap:12px" onclick="closeM('m-tchoice');openTodoGroup(null)"><span style="font-size:20px">📁</span><div style="text-align:left"><div style="font-weight:700">Create Group</div><div style="font-size:12px;color:var(--sub);margin-top:2px">Group related tasks</div></div></button>
   </div>
-</div>
- 
-<div id="toast"></div>
- 
+</div></div>
+<div class="ov" id="m-titem"><div class="modal"><div class="mh"></div><div id="ti-title" class="mt">New Task</div>
+  <div class="fl"><label class="fl-lbl">Task Name</label><input id="ti-name" placeholder="e.g. Buy groceries, Study…" maxlength="80"></div>
+  <div class="fl"><label class="fl-lbl">Priority</label>
+    <div style="display:flex;gap:8px">
+      <button id="pri-low" class="btn bg" style="flex:1;font-size:12px" onclick="setPri('low')">🟢 Low</button>
+      <button id="pri-med" class="btn bg" style="flex:1;font-size:12px" onclick="setPri('med')">🟡 Medium</button>
+      <button id="pri-high" class="btn bg" style="flex:1;font-size:12px" onclick="setPri('high')">🔴 High</button>
+    </div>
+  </div>
+  <div class="fl"><label class="fl-lbl">Due Date (optional)</label><input type="date" id="ti-due" style="color-scheme:dark"></div>
+  <div style="display:flex;gap:9px"><button class="btn bg" style="flex:1" onclick="closeM('m-titem')">Cancel</button><button class="btn bp" style="flex:1" onclick="saveTodoItem()">Add Task</button></div>
+</div></div>
+<div class="ov" id="m-tgroup"><div class="modal"><div class="mh"></div><div class="mt">New Group</div>
+  <div class="fl"><label class="fl-lbl">Group Name</label><input id="tg-name" placeholder="🏠 Home, 📚 Study, 💼 Work…" maxlength="40"></div>
+  <div style="display:flex;gap:9px"><button class="btn bg" style="flex:1" onclick="closeM('m-tgroup')">Cancel</button><button class="btn bp" style="flex:1" onclick="saveTodoGroup()">Create</button></div>
+</div></div>
+<div class="ov" id="m-sets"><div class="modal"><div class="mh"></div><div class="mt">Daily Goals</div>
+  <div class="fl"><label class="fl-lbl">Calorie Goal (kcal)</label><input type="number" id="s-cal" min="500" max="5000"></div>
+  <div class="fl"><label class="fl-lbl">Water Goal (Liters)</label>
+    <div style="display:flex;align-items:center;gap:8px">
+      <input type="number" id="s-water" min="0.5" max="6" step="0.1" style="flex:1">
+      <span style="color:var(--sub);flex-shrink:0">L</span>
+    </div>
+  </div>
+  <button class="btn bp" style="width:100%" onclick="saveSets()">Save Goals</button>
+</div></div>
 <script>
-/* ═══════════════ CONFIG ═══════════════ */
-const CARD_COLORS = [
-  '#8B5E3C','#2E7D6B','#7B3F5E','#3B6E45','#2E5F8A','#8A6E2E',
-  '#5E3B7B','#6E2E2E','#2E6E6E','#7B6E3B','#4A4A8A','#6E4A2E'
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+var CARD_COLORS=['#8B5E3C','#2E7D6B','#7B3F5E','#3B6E45','#2E5F8A','#8A6E2E','#5E3B7B','#6E2E2E','#2E6E6E','#7B6E3B','#4A4A8A','#6E4A2E'];
+var DAYS7=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var DAYS3=['Su','Mo','Tu','We','Th','Fr','Sa'];
+var MCFG={breakfast:{icon:'🌅',label:'Breakfast',color:'#fbbf24'},lunch:{icon:'☀️',label:'Lunch',color:'#4ade80'},dinner:{icon:'🌙',label:'Dinner',color:'#a78bfa'},snacks:{icon:'🍎',label:'Snacks',color:'#f87171'}};
+var OFFL=[
+  {n:'White Rice (1 cup)',c:206,cb:45,p:4,f:0},
+  {n:'Dal (1 cup)',c:230,cb:40,p:15,f:1},
+  {n:'Roti / Chapati (1)',c:71,cb:15,p:2,f:1},
+  {n:'Chicken Biryani (1 plate)',c:500,cb:60,p:25,f:15},
+  {n:'Idli (2 pieces)',c:76,cb:16,p:3,f:0},
+  {n:'Dosa (1 plain)',c:168,cb:30,p:4,f:4},
+  {n:'Sambar (1 cup)',c:100,cb:15,p:5,f:2},
+  {n:'Paneer (100g)',c:265,cb:4,p:18,f:20},
+  {n:'Milk (1 glass)',c:149,cb:12,p:8,f:8},
+  {n:'Curd (1 cup)',c:154,cb:12,p:13,f:4},
+  {n:'Egg (1 boiled)',c:77,cb:1,p:6,f:5},
+  {n:'Banana (1 medium)',c:89,cb:23,p:1,f:0},
+  {n:'Apple (1 medium)',c:95,cb:25,p:0,f:0},
+  {n:'Oats (1 cup cooked)',c:166,cb:28,p:6,f:4},
+  {n:'Poha (1 cup)',c:250,cb:45,p:4,f:5},
+  {n:'Chicken Curry (1 cup)',c:320,cb:5,p:28,f:20},
+  {n:'Rajma (1 cup)',c:337,cb:60,p:22,f:1},
+  {n:'Chole (1 cup)',c:270,cb:45,p:15,f:5},
+  {n:'Paratha (1)',c:260,cb:38,p:6,f:10},
+  {n:'Ghee (1 tbsp)',c:135,cb:0,p:0,f:15},
+  {n:'Masala Tea (1 cup)',c:50,cb:7,p:1,f:2},
+  {n:'Maggi (1 pack)',c:355,cb:50,p:9,f:13},
+  {n:'Samosa (1)',c:262,cb:30,p:5,f:13},
+  {n:'Khichdi (1 cup)',c:200,cb:36,p:9,f:2},
+  {n:'Palak Paneer (1 cup)',c:300,cb:10,p:15,f:22},
+  {n:'Naan (1)',c:260,cb:45,p:7,f:6},
+  {n:'Pav Bhaji (1 plate)',c:400,cb:55,p:10,f:16},
+  {n:'Butter Chicken (1 cup)',c:380,cb:8,p:30,f:25},
+  {n:'Protein Shake (1 scoop)',c:120,cb:5,p:24,f:2},
+  {n:'Aloo Paratha (1)',c:300,cb:44,p:7,f:11},
+  {n:'Lassi Sweet (1 glass)',c:180,cb:25,p:7,f:5},
+  {n:'Watermelon (1 slice)',c:86,cb:21,p:2,f:0},
+  {n:'Boiled Potato (1 medium)',c:161,cb:37,p:4,f:0},
+  {n:'Coconut Water (1 glass)',c:46,cb:9,p:2,f:0},
 ];
-const DAYS7 = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const MCFG = {
-  breakfast:{icon:'🌅',label:'Breakfast',color:'#fbbf24'},
-  lunch:{icon:'☀️',label:'Lunch',color:'#4ade80'},
-  dinner:{icon:'🌙',label:'Dinner',color:'#a78bfa'},
-  snacks:{icon:'🍎',label:'Snacks',color:'#f87171'},
+ 
+var S={
+  habits:[],hgroups:[],hlogs:{},
+  foods:{},water:{},calGoal:2000,waterGoal:2500,
+  todos:[],tgroups:[],
+  recents:[],favorites:[],
+  theme:'dark'
 };
-const OFFL=[
-  {name:'White Rice (1 cup cooked)',cal:206,carb:45,prot:4,fat:0},
-  {name:'Dal (1 cup)',cal:230,carb:40,prot:15,fat:1},
-  {name:'Roti / Chapati (1)',cal:71,carb:15,prot:2,fat:1},
-  {name:'Chicken Biryani (1 plate)',cal:500,carb:60,prot:25,fat:15},
-  {name:'Idli (2 pieces)',cal:76,carb:16,prot:3,fat:0},
-  {name:'Dosa (1 plain)',cal:168,carb:30,prot:4,fat:4},
-  {name:'Sambar (1 cup)',cal:100,carb:15,prot:5,fat:2},
-  {name:'Paneer (100g)',cal:265,carb:4,prot:18,fat:20},
-  {name:'Whole Milk (1 glass)',cal:149,carb:12,prot:8,fat:8},
-  {name:'Curd / Yogurt (1 cup)',cal:154,carb:12,prot:13,fat:4},
-  {name:'Egg (1 boiled)',cal:77,carb:1,prot:6,fat:5},
-  {name:'Banana (1 medium)',cal:89,carb:23,prot:1,fat:0},
-  {name:'Apple (1 medium)',cal:95,carb:25,prot:0,fat:0},
-  {name:'Oats (1 cup cooked)',cal:166,carb:28,prot:6,fat:4},
-  {name:'Poha (1 cup)',cal:250,carb:45,prot:4,fat:5},
-  {name:'Chicken Curry (1 cup)',cal:320,carb:5,prot:28,fat:20},
-  {name:'Rajma (1 cup)',cal:337,carb:60,prot:22,fat:1},
-  {name:'Chole (1 cup)',cal:270,carb:45,prot:15,fat:5},
-  {name:'Paratha (1)',cal:260,carb:38,prot:6,fat:10},
-  {name:'Butter (1 tbsp)',cal:102,carb:0,prot:0,fat:12},
-  {name:'Ghee (1 tbsp)',cal:135,carb:0,prot:0,fat:15},
-  {name:'Masala Tea (1 cup)',cal:50,carb:7,prot:1,fat:2},
-  {name:'Maggi Noodles (1 pack)',cal:355,carb:50,prot:9,fat:13},
-  {name:'Samosa (1)',cal:262,carb:30,prot:5,fat:13},
-  {name:'Khichdi (1 cup)',cal:200,carb:36,prot:9,fat:2},
-  {name:'Palak Paneer (1 cup)',cal:300,carb:10,prot:15,fat:22},
-  {name:'Naan (1)',cal:260,carb:45,prot:7,fat:6},
-  {name:'Lassi Sweet (1 glass)',cal:180,carb:25,prot:7,fat:5},
-  {name:'Pav Bhaji (1 plate)',cal:400,carb:55,prot:10,fat:16},
-  {name:'Butter Chicken (1 cup)',cal:380,carb:8,prot:30,fat:25},
-  {name:'Protein Shake (1 scoop)',cal:120,carb:5,prot:24,fat:2},
-  {name:'Aloo Paratha (1)',cal:300,carb:44,prot:7,fat:11},
-  {name:'Uttapam (1)',cal:178,carb:28,prot:5,fat:5},
-];
+var curScreen=0,habitTab=0,selCol=CARD_COLORS[0],selCol2=CARD_COLORS[0];
+var collGrps={},collTGrps={};
+var noteHid=null,noteDt=null;
+var curMeal='breakfast';
+var detailFood=null,foodCache={},fcIdx=0;
+var todoPri='med',todoParentGid=null,curGid='';
+var selDays=[0,1,2,3,4,5,6];
+var rPending=false;
  
-/* ═══════════════ STATE ═══════════════ */
-let S = {habits:[],groups:[],hL:{},foods:{},water:{},calGoal:2000,waterGoal:8,theme:'dark',recents:[],favorites:[],todos:[],todoGroups:[]};
-let cur='today', habitTab='today', selCol=CARD_COLORS[0];
-let collapsedGroups={};
-let selGroupId='';
-let _todoPri='med', _todoParentGid=null, _collapsedTodoGroups={}, _curGroupId='', _selColGH=CARD_COLORS[0];
-let noteHid=null, noteDate=null;
-let weekHid=null;
- 
-function load(){try{const d=localStorage.getItem('lifeos_v6');if(d)S={...S,...JSON.parse(d)}}catch(e){}if(!S.groups)S.groups=[];if(!S.recents)S.recents=[];if(!S.favorites)S.favorites=[];if(!S.todos)S.todos=[];if(!S.todoGroups)S.todoGroups=[];applyTheme();}
-function save(){localStorage.setItem('lifeos_v6',JSON.stringify(S));}
 function today(){return new Date().toISOString().slice(0,10);}
-function dOff(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
-function dLbl(dt){return DAYS7[new Date(dt+'T12:00:00').getDay()];}
-function isFuture(dt){return dt>today();}
-function toast(m){
-  const e=document.getElementById('toast');
-  e.innerHTML=m;
-  e._undo=null;
-  e.classList.add('show');
-  clearTimeout(e._t);
-  e._t=setTimeout(()=>e.classList.remove('show'),2200);
+function dOff(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function isFut(dt){return dt>today();}
+ 
+function load(){
+  try{var d=localStorage.getItem('lifeos_v10');if(d)S=Object.assign({},S,JSON.parse(d));}catch(e){}
+  if(!S.habits)S.habits=[];if(!S.hgroups)S.hgroups=[];if(!S.hlogs)S.hlogs={};
+  if(!S.foods)S.foods={};if(!S.water)S.water={};
+  if(!S.todos)S.todos=[];if(!S.tgroups)S.tgroups=[];
+  if(!S.recents)S.recents=[];if(!S.favorites)S.favorites=[];
+  if(S.waterGoal<=20)S.waterGoal=S.waterGoal*250;
+  applyTheme();
 }
-function toastUndo(m,undoFn){
-  const e=document.getElementById('toast');
-  e._undo=undoFn;
-  e.innerHTML=`${m} &nbsp;<span onclick="doUndo()" style="font-weight:900;text-decoration:underline;cursor:pointer;letter-spacing:.3px">UNDO</span>`;
-  e.classList.add('show');
-  clearTimeout(e._t);
-  e._t=setTimeout(()=>{e.classList.remove('show');e._undo=null;},3500);
+function save(){localStorage.setItem('lifeos_v10',JSON.stringify(S));}
+ 
+function applyTheme(){
+  document.documentElement.className=S.theme==='light'?'light':'';
+  document.getElementById('tc').content=S.theme==='light'?'#f2f2f7':'#0a0a0a';
+}
+function togTheme(){S.theme=S.theme==='dark'?'light':'dark';applyTheme();save();render();}
+ 
+function toast(m){
+  var e=document.getElementById('toast');
+  e.innerHTML=m;e._undo=null;
+  e.classList.add('show');clearTimeout(e._t);
+  e._t=setTimeout(function(){e.classList.remove('show');},2200);
+}
+function toastUndo(m,fn){
+  var e=document.getElementById('toast');
+  e._undo=fn;
+  e.innerHTML=m+'&nbsp;&nbsp;<span onclick="doUndo()" style="font-weight:900;text-decoration:underline;cursor:pointer;color:var(--accent);padding:4px 2px">UNDO</span>';
+  e.classList.add('show');clearTimeout(e._t);
+  e._t=setTimeout(function(){e.classList.remove('show');e._undo=null;},3500);
 }
 function doUndo(){
-  const e=document.getElementById('toast');
+  var e=document.getElementById('toast');
   if(e._undo){e._undo();e._undo=null;}
-  e.classList.remove('show');
-  clearTimeout(e._t);
+  e.classList.remove('show');clearTimeout(e._t);
 }
-function applyTheme(){document.documentElement.className=S.theme==='light'?'light':'';document.getElementById('theme-meta').content=S.theme==='light'?'#f2f2f7':'#0a0a0a';}
-function togTheme(){S.theme=S.theme==='dark'?'light':'dark';applyTheme();save();render();}
-const SCREENS=['today','habits','calories','todo','analytics'];
-function nav(s,dir){
-  if(s===cur)return;
-  // close any open modals when switching screens
-  document.querySelectorAll('.ov.open').forEach(m=>m.classList.remove('open'));
-  const prev=document.getElementById('s-'+cur);
-  const next=document.getElementById('s-'+s);
+ 
+function nav(i,dir){
+  if(i===curScreen)return;
+  document.querySelectorAll('.ov.open').forEach(function(m){m.classList.remove('open');});
+  var prev=document.getElementById('s'+curScreen);
+  var next=document.getElementById('s'+i);
   if(!prev||!next)return;
-  const goRight=dir===undefined?(SCREENS.indexOf(s)>SCREENS.indexOf(cur)):dir==='right';
- 
-  // position next screen off-screen in the direction it'll come from
-  next.classList.add('no-transition');
-  next.classList.remove('slide-left','slide-right','active');
-  next.classList.add(goRight?'slide-right':'slide-left');
-  next.offsetHeight; // force reflow
-  next.classList.remove('no-transition');
- 
-  // slide current out
-  prev.classList.add(goRight?'slide-left':'slide-right');
+  var goR=dir!==undefined?dir==='r':(i>curScreen);
+  next.classList.add('no-t');
+  next.classList.remove('sl','active');
+  if(!goR)next.classList.add('sl');
+  void next.offsetHeight;
+  next.classList.remove('no-t');
+  if(goR)prev.classList.add('sl');
+  if(!goR)prev.style.transform='translateX(105%)';
   prev.classList.remove('active');
- 
-  // slide next in
-  next.classList.remove('slide-left','slide-right');
+  next.classList.remove('sl');
   next.classList.add('active');
- 
-  // cleanup prev after transition
-  setTimeout(()=>{
-    prev.classList.remove('slide-left','slide-right');
-  },350);
- 
-  cur=s;
-  document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('active',b.dataset.s===s));
-  document.getElementById('fab').style.display=s==='analytics'?'none':'flex';
-  // move pill
-  const pill=document.getElementById('nav-pill');
-  if(pill){const idx=SCREENS.indexOf(s);pill.style.left=(idx*20+1)+'%';}
+  setTimeout(function(){prev.classList.remove('sl');prev.style.transform='';},300);
+  curScreen=i;
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.toggle('on',+b.dataset.i===i);});
+  var pill=document.getElementById('pill');
+  if(pill)pill.style.left=(i*20+1)+'%';
+  var fab=document.getElementById('fab');if(fab)fab.style.display=i===4?'none':'flex';
   render();
 }
-function openFab(){
-  if(cur==='habits') openM('m-hab-choice');
-  else if(cur==='todo') openM('m-todo-choice');
-  else if(cur==='calories') openFoodModal(null);
-  else if(cur==='today') openFoodModal(null);
-}
-function openM(id){const e=document.getElementById(id);if(!e)return;e.classList.add('open');e.onclick=ev=>{if(ev.target===e)closeM(id);};if(id==='m-habit')populateGroupSel();}
-function closeM(id){document.getElementById(id).classList.remove('open');}
  
-/* ═══════════════ HABIT LOGIC ═══════════════ */
-function hLog(dt,id){return S.hL[dt]?.[id]||{done:false,note:''};}
-function setHLog(dt,id,obj){if(!S.hL[dt])S.hL[dt]={};S.hL[dt][id]={...hLog(dt,id),...obj};}
-function togH(id,date){
-  date=date||today();
-  const c=hLog(date,id);setHLog(date,id,{done:!c.done});
-  save();render();
-  if(date===today()){
-    const h=S.habits.find(h=>h.id===id);
-    if(!c.done)toast(h.name+' ✅');
-  }
-  // refresh weekly if open
-  if(weekHid===id){renderWeekDetail(id);}
+function openM(id){
+  var e=document.getElementById(id);if(!e)return;
+  e.classList.add('open');
+  e.onclick=function(ev){if(ev.target===e)closeM(id);};
+  if(id==='m-habit'){populateHGSel();renderDaySel();rSwatches();}
+  if(id==='m-food'){renderFMBody();}
 }
+function closeM(id){document.getElementById(id)&&document.getElementById(id).classList.remove('open');}
+ 
+function openFab(){
+  if(curScreen===1)openM('m-hchoice');
+  else if(curScreen===3)openM('m-tchoice');
+  else if(curScreen===2||curScreen===0)openFoodModal(null);
+}
+ 
+// ═══ RENDER (rAF throttled) ═══
+function render(){
+  if(rPending)return;
+  rPending=true;
+  requestAnimationFrame(function(){
+    rPending=false;
+    rSwatches();
+    if(curScreen===0)rToday();
+    else if(curScreen===1)rHabits();
+    else if(curScreen===2)rCalories();
+    else if(curScreen===3)rTodo();
+    else if(curScreen===4)rStats();
+    if(curScreen!==0)rToday();
+  });
+}
+function renderAll(){rToday();rHabits();rCalories();rTodo();rStats();rSwatches();}
+ 
+// ═══ UTILS ═══
+function hdr(title,sub){
+  return '<div class="hdr"><div class="hr"><div><h1>'+title+'</h1>'+(sub?'<div class="sub">'+sub+'</div>':'')+'</div>'
+    +'<div class="ha"><div class="tog" onclick="togTheme()"></div>'
+    +'<button class="ib" onclick="openM(\'m-sets\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button>'
+    +'</div></div></div>';
+}
+function chkSvg(color){
+  return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="'+(color||'#fff')+'" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+}
+function mRing(pct,color,sz,sw){
+  sz=sz||54;sw=sw||5;
+  var R=(sz-sw)/2,circ=+(2*Math.PI*R).toFixed(2),fill=+(circ-Math.min(100,pct)/100*circ).toFixed(2);
+  return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'" style="transform:rotate(-90deg)">'
+    +'<circle cx="'+(sz/2)+'" cy="'+(sz/2)+'" r="'+R+'" fill="none" stroke="var(--surf)" stroke-width="'+sw+'"/>'
+    +'<circle cx="'+(sz/2)+'" cy="'+(sz/2)+'" r="'+R+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-dasharray="'+circ+'" stroke-dashoffset="'+fill+'" stroke-linecap="round" style="transition:stroke-dashoffset .5s"/>'
+    +'</svg>';
+}
+ 
+// ═══ SWATCHES ═══
+function rSwatches(){
+  var h1='',h2='';
+  CARD_COLORS.forEach(function(c){
+    h1+='<div class="sw-dot'+(c===selCol?' sel':'')+'" style="background:'+c+'" onclick="selCol=\''+c+'\';rSwatches()"></div>';
+    h2+='<div class="sw-dot'+(c===selCol2?' sel':'')+'" style="background:'+c+'" onclick="selCol2=\''+c+'\';rSwatches()"></div>';
+  });
+  var e1=document.getElementById('sw-row');if(e1)e1.innerHTML=h1;
+  var e2=document.getElementById('sw-row2');if(e2)e2.innerHTML=h2;
+}
+function renderDaySel(){
+  var e=document.getElementById('day-sel');if(!e)return;
+  var h='';
+  DAYS3.forEach(function(d,i){
+    h+='<button type="button" class="day-btn'+(selDays.indexOf(i)>=0?' on':'')+'" onclick="togDay('+i+')">'+d+'</button>';
+  });
+  e.innerHTML=h;
+}
+function togDay(i){
+  var idx=selDays.indexOf(i);
+  if(idx>=0)selDays.splice(idx,1);else selDays.push(i);
+  renderDaySel();
+}
+function populateHGSel(){
+  var e=document.getElementById('h-gsel');if(!e)return;
+  e.innerHTML='<option value="">— No group —</option>';
+  S.hgroups.forEach(function(g){e.innerHTML+='<option value="'+g.id+'">'+g.name+'</option>';});
+}
+ 
+// ═══ HABITS ═══
+function hLog(dt,id){return(S.hlogs[dt]&&S.hlogs[dt][id])||{done:false,note:''};}
+function setHLog(dt,id,obj){if(!S.hlogs[dt])S.hlogs[dt]={};S.hlogs[dt][id]=Object.assign({},hLog(dt,id),obj);}
+function isHabitDue(h,dt){if(!h.freq||h.freq.length===0)return true;var dow=new Date(dt+'T12:00:00').getDay();return h.freq.indexOf(dow)>=0;}
 function streak(h){
-  let s=0,d=new Date();
+  var s=0,d=new Date();
   if(!hLog(today(),h.id).done)d.setDate(d.getDate()-1);
-  while(s<366){if(hLog(d.toISOString().slice(0,10),h.id).done){s++;d.setDate(d.getDate()-1);}else break;}
+  while(s<366){var dt=d.toISOString().slice(0,10);if(hLog(dt,h.id).done){s++;d.setDate(d.getDate()-1);}else break;}
   return s;
 }
-function sc30(h){let c=0;for(let i=0;i<30;i++){if(hLog(dOff(-i),h.id).done)c++;}return Math.round(c/30*100);}
+ 
+function togH(id,dt){
+  dt=dt||today();
+  var c=hLog(dt,id);setHLog(dt,id,{done:!c.done});
+  save();render();
+  if(dt===today()&&!c.done){var h=S.habits.find(function(x){return x.id===id;});if(h)toast(h.name+' ✅');}
+}
+ 
 function saveHabit(){
-  const n=document.getElementById('h-name').value.trim();
+  var n=document.getElementById('h-name').value.trim();
   if(!n){toast('Enter a name');return;}
-  const gid=document.getElementById('h-group-sel')?.value||'';
-  S.habits.push({id:Date.now().toString(),name:n,color:selCol,groupId:gid});
-  save();closeM('m-habit');document.getElementById('h-name').value='';
-  if(document.getElementById('h-group-sel'))document.getElementById('h-group-sel').value='';
+  var gid=(document.getElementById('h-gsel')||{}).value||'';
+  var freq=selDays.length===7?[]:selDays.slice();
+  S.habits.push({id:'h'+Date.now(),name:n,color:selCol,groupId:gid,freq:freq});
+  save();closeM('m-habit');
+  document.getElementById('h-name').value='';selDays=[0,1,2,3,4,5,6];
   toast('Habit added 🎯');render();
 }
-function saveGroup(){
-  const n=document.getElementById('g-name').value.trim();
-  if(!n){toast('Enter a group name');return;}
-  const gid='g'+Date.now().toString();
-  S.groups.push({id:gid,name:n});
-  collapsedGroups[gid]=true; // start collapsed
-  save();closeM('m-group');
-  document.getElementById('g-name').value='';
-  // open step 2 — add habits to this group
-  openGroupHabitsModal(gid);
+function delHabit(id){
+  var h=S.habits.find(function(x){return x.id===id;});if(!h)return;
+  var bak=S.habits.map(function(x){return Object.assign({},x);});
+  var logs=JSON.parse(JSON.stringify(S.hlogs));
+  S.habits=S.habits.filter(function(x){return x.id!==id;});
+  save();closeM('m-hnote');
+  showUndo('Habit deleted 🗑️',function(){S.habits=bak;S.hlogs=logs;save();renderAll();});
+  rPending=false;render();
 }
-function openGroupHabitsModal(gid){
-  _curGroupId=gid;
-  _selColGH=CARD_COLORS[0];
-  const g=S.groups.find(g=>g.id===gid);
-  if(!g)return;
-  document.getElementById('gh-group-name').textContent=g.name;
-  document.getElementById('gh-input').value='';
-  renderGHList();
-  renderGHSwatches();
-  openM('m-group-habits');
-}
-function renderGHList(){
-  const habits=S.habits.filter(h=>h.groupId===_curGroupId);
-  const el=document.getElementById('gh-list');
-  if(!el)return;
-  if(!habits.length){el.innerHTML='<div style="font-size:12px;color:var(--sub);text-align:center;padding:8px">No habits yet — add one below</div>';return;}
-  el.innerHTML=habits.map(h=>`
-    <div style="display:flex;align-items:center;gap:9px;padding:9px 12px;background:${h.color};border-radius:12px">
-      <div style="flex:1;font-weight:700;color:#fff;font-size:14px">${h.name}</div>
-      <button onclick="delH('${h.id}')" style="background:rgba(0,0,0,.25);border:none;border-radius:50%;width:24px;height:24px;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">×</button>
-    </div>`).join('');
-}
-function renderGHSwatches(){
-  const el=document.getElementById('sw-row-gh');
-  if(!el)return;
-  el.innerHTML=CARD_COLORS.map(col=>`<div class="sw ${col===_selColGH?'sel':''}" style="background:${col}" onclick="_selColGH='${col}';renderGHSwatches()"></div>`).join('');
-}
-function addHabitToNewGroup(){
-  const inp=document.getElementById('gh-input');
-  const n=inp.value.trim();
-  if(!n){toast('Enter a habit name');return;}
-  S.habits.push({id:Date.now().toString(),name:n,color:_selColGH,groupId:_curGroupId});
-  save();inp.value='';renderGHList();render();
-  toast('Added: '+n+' ✅');
-}
-function delGroup(gid){
-  const g=S.groups.find(g=>g.id===gid);
-  if(!g)return;
-  const backupGroups=S.groups.map(x=>({...x}));
-  const backupHabits=S.habits.map(h=>({...h}));
-  // delete the group AND all habits inside it
-  S.groups=S.groups.filter(x=>x.id!==gid);
-  S.habits=S.habits.filter(h=>h.groupId!==gid);
-  save();render();
-  toastUndo('Group deleted',()=>{
-    S.groups=backupGroups;
-    S.habits=backupHabits;
-    save();render();
-  });
-}
-function togGroup(gid){
-  collapsedGroups[gid]=!collapsedGroups[gid];
-  const body=document.getElementById('grp-body-'+gid);
-  const chev=document.getElementById('grp-chev-'+gid);
-  const hdr=document.getElementById('grp-hdr-'+gid);
-  if(!body){render();return;}
  
-  if(collapsedGroups[gid]){
-    const h=body.scrollHeight;
-    body.style.transition='none';
-    body.style.height=h+'px';
-    body.offsetHeight;
-    body.style.transition='';
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        body.style.height='0px';
-        body.classList.remove('expanded');
-      });
-    });
-    if(chev)chev.classList.remove('open');
-    if(hdr)hdr.style.borderRadius='16px';
-    setTimeout(()=>{ body.style.height=''; },340);
+function saveHGroup(){
+  var n=document.getElementById('hg-name').value.trim();
+  if(!n){toast('Enter a name');return;}
+  var gid='hg'+Date.now();
+  S.hgroups.push({id:gid,name:n});
+  collGrps[gid]=true;
+  save();closeM('m-hgroup');
+  document.getElementById('hg-name').value='';
+  document.getElementById('hg2-title').textContent=n;
+  document.getElementById('hg2-list').innerHTML='';
+  curGid=gid;selCol2=CARD_COLORS[0];rSwatches();
+  openM('m-hgroup2');
+}
+function addHToGroup(){
+  var inp=document.getElementById('hg2-inp');
+  var n=inp.value.trim();if(!n){toast('Enter a habit name');return;}
+  S.habits.push({id:'h'+Date.now(),name:n,color:selCol2,groupId:curGid,freq:[]});
+  save();inp.value='';
+  var g=S.hgroups.find(function(x){return x.id===curGid;});
+  var list=S.habits.filter(function(h){return h.groupId===curGid;});
+  var e=document.getElementById('hg2-list');
+  if(e)e.innerHTML=list.map(function(h){return'<div style="padding:9px 12px;background:'+h.color+';border-radius:12px;color:#fff;font-weight:700;font-size:14px">'+h.name+'</div>';}).join('');
+  render();toast('Added ✅');
+}
+function delHGroup(gid){
+  var bak={groups:S.hgroups.slice(),habits:S.habits.map(function(h){return Object.assign({},h);})};
+  S.hgroups=S.hgroups.filter(function(g){return g.id!==gid;});
+  S.habits=S.habits.filter(function(h){return h.groupId!==gid;});
+  save();render();
+  showUndo('Group deleted 🗑️',function(){S.hgroups=bak.groups;S.habits=bak.habits;save();render();});
+}
+function togGrp(gid){
+  collGrps[gid]=!collGrps[gid];
+  var body=document.getElementById('grpb-'+gid);
+  var chev=document.getElementById('grpc-'+gid);
+  var hdr2=document.getElementById('grph-'+gid);
+  if(!body){render();return;}
+  if(collGrps[gid]){
+    var h2=body.scrollHeight;
+    body.style.transition='none';body.style.height=h2+'px';
+    void body.offsetHeight;body.style.transition='';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){body.style.height='0';});});
+    if(chev)chev.style.transform='rotate(0deg)';
+    if(hdr2)hdr2.style.borderRadius='16px';
+    setTimeout(function(){body.style.height='';body.style.border='none';},300);
   } else {
-    body.classList.add('expanded');
-    body.style.height='0px';
-    body.style.transition='none';
-    body.offsetHeight;
-    const target=body.scrollHeight;
-    body.style.transition='';
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        body.style.height=target+'px';
-      });
-    });
-    if(chev)chev.classList.add('open');
-    if(hdr)hdr.style.borderRadius='16px 16px 0 0';
-    setTimeout(()=>{ body.style.height='auto'; },340);
+    body.style.removeProperty('border');
+    body.style.height='0';body.style.transition='none';
+    void body.offsetHeight;body.style.transition='';
+    var target=body.scrollHeight;
+    requestAnimationFrame(function(){requestAnimationFrame(function(){body.style.height=target+'px';});});
+    if(chev)chev.style.transform='rotate(90deg)';
+    if(hdr2)hdr2.style.borderRadius='16px 16px 0 0';
+    setTimeout(function(){body.style.height='auto';},300);
   }
-}
-function openHabitModal(gid){
-  openM('m-habit');
-  setTimeout(()=>{
-    const sel=document.getElementById('h-group-sel');
-    if(sel)sel.value=gid||'';
-  },50);
-}
-function addHabitToGroup(gid){
-  collapsedGroups[gid]=false;
-  openGroupHabitsModal(gid);
-}
-function populateGroupSel(){
-  const sel=document.getElementById('h-group-sel');if(!sel)return;
-  sel.innerHTML='<option value="">— No group —</option>'+(S.groups.map(g=>`<option value="${g.id}">${g.name}</option>`).join(''));
-}
-function delH(id){
-  const h=S.habits.find(h=>h.id===id);
-  if(!h)return;
-  const backup={habit:{...h},idx:S.habits.findIndex(x=>x.id===id)};
-  S.habits=S.habits.filter(x=>x.id!==id);
-  save();
-  if(document.getElementById('m-week').classList.contains('open'))closeM('m-week');
-  renderGHList();render();
-  toastUndo('Habit deleted',()=>{
-    S.habits.splice(backup.idx,0,backup.habit);
-    save();renderGHList();render();
-  });
 }
 function openNote(hid,dt){
-  noteHid=hid;noteDate=dt||today();
-  const h=S.habits.find(h=>h.id===hid);
-  document.getElementById('note-title').textContent=h.name;
-  const dtObj=new Date(noteDate+'T12:00:00');
-  document.getElementById('note-date-lbl').textContent=dtObj.toLocaleDateString('en',{weekday:'long',month:'short',day:'numeric'});
-  document.getElementById('note-inp').value=hLog(noteDate,hid).note||'';
-  openM('m-note');
+  noteHid=hid;noteDt=dt||today();
+  var h=S.habits.find(function(x){return x.id===hid;});
+  document.getElementById('hn-title').textContent=h?h.name:'Note';
+  document.getElementById('hn-date').textContent=new Date(noteDt+'T12:00:00').toLocaleDateString('en',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('hn-inp').value=hLog(noteDt,hid).note||'';
+  openM('m-hnote');
 }
 function saveNote(){
-  setHLog(noteDate,noteHid,{note:document.getElementById('note-inp').value});
-  save();closeM('m-note');toast('Note saved ✏️');
-  if(weekHid===noteHid)renderWeekDetail(noteHid);
-  render();
+  setHLog(noteDt,noteHid,{note:document.getElementById('hn-inp').value});
+  save();closeM('m-hnote');toast('Note saved ✏️');render();
 }
  
-/* Weekly detail modal */
-function openWeekDetail(hid){
-  weekHid=hid;
-  renderWeekDetail(hid);
-  openM('m-week');
-}
-function renderWeekDetail(hid){
-  const h=S.habits.find(h=>h.id===hid);
-  if(!h)return;
-  const last7=Array.from({length:7},(_,i)=>dOff(i-6));
-  const s=streak(h);
-  const sc=sc30(h);
-  const todayNote=hLog(today(),hid).note;
-  document.getElementById('week-content').innerHTML=`
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-      <div style="width:14px;height:14px;border-radius:50%;background:${h.color};flex-shrink:0"></div>
-      <div style="font-family:var(--f2);font-size:20px;font-weight:800;flex:1">${h.name}</div>
-      <div style="font-family:var(--fm);font-size:13px;color:var(--sub)">🔥${s}</div>
-    </div>
-    <div style="background:var(--surf);border-radius:14px;padding:14px 10px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-        ${last7.map((dt,i)=>{
-          const done=hLog(dt,hid).done;
-          const isT=dt===today();
-          const fut=isFuture(dt);
-          const dtObj=new Date(dt+'T12:00:00');
-          const dayN=DAYS7[dtObj.getDay()];
-          const dayNum=dtObj.getDate();
-          return `<div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-            <div style="font-size:9px;font-weight:800;text-transform:uppercase;color:${isT?'var(--accent)':'var(--sub)'}">${dayN}</div>
-            <div style="font-size:11px;font-family:var(--fm);color:var(--sub)">${dayNum}</div>
-            <div class="hwd-dot ${done?'done':''} ${isT?'today-ring':''} ${fut?'future':''}"
-              style="${done?'background:'+h.color+';border-color:'+h.color:''}${fut?';opacity:.25':''}"
-              onclick="${fut?'':'togHDay(\''+hid+'\',\''+dt+'\')'}">
-              ${done?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
-    <div style="background:var(--surf);border-radius:14px;padding:13px 14px;margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--sub)">30-day completion</div>
-        <div style="font-family:var(--fm);font-size:13px;color:var(--accent)">${sc}%</div>
-      </div>
-      <div class="pb" style="height:6px"><div class="pbf" style="width:${sc}%;background:${h.color}"></div></div>
-    </div>
-    <div style="background:var(--surf);border-radius:14px;padding:13px 14px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--sub)">Today's note</div>
-        <button onclick="openNote('${hid}','${today()}')" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--accent);font-weight:700">Edit ✏️</button>
-      </div>
-      ${todayNote?`<div style="font-size:13px;color:var(--text);line-height:1.5">"${todayNote}"</div>`:`<div style="font-size:13px;color:var(--sub);font-style:italic">No note yet — tap Edit to add one.</div>`}
-    </div>
-    <div style="display:flex;gap:9px">
-      <button class="btn bg" style="flex:1" onclick="closeM('m-week')">Close</button>
-      <button class="btn" style="flex:1;background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.15)" onclick="delH('${hid}')">Delete</button>
-    </div>
-  `;
-}
-function togHDay(hid,dt){
-  const c=hLog(dt,hid);setHLog(dt,hid,{done:!c.done});
-  save();renderWeekDetail(hid);render();
-}
- 
-/* ═══════════════ SWIPE CARDS ═══════════════ */
-function attachSwipe(cardEl, hid) {
-  let startX=0,startY=0,curX=0,dragging=false,isHoriz=null;
-  const THRESHOLD=70; // how far to swipe to trigger
- 
-  function onStart(e){
-    const pt=e.touches?e.touches[0]:e;
-    startX=pt.clientX;startY=pt.clientY;
-    curX=0;dragging=true;isHoriz=null;
-    cardEl.classList.remove('snapping');
-  }
+// ═══ SWIPE CARDS ═══
+function attachSwipe(el,hid){
+  var sx=0,sy=0,cx=0,drag=false,horiz=null;
+  function onStart(e){var pt=e.touches?e.touches[0]:e;sx=pt.clientX;sy=pt.clientY;cx=0;drag=true;horiz=null;el.classList.remove('snap');}
   function onMove(e){
-    if(!dragging)return;
-    const pt=e.touches?e.touches[0]:e;
-    const dx=pt.clientX-startX;
-    const dy=pt.clientY-startY;
-    if(isHoriz===null){
-      if(Math.abs(dx)<8&&Math.abs(dy)<8)return;
-      isHoriz=Math.abs(dx)>Math.abs(dy)*1.5; // must be clearly horizontal
-    }
-    if(!isHoriz)return;
-    e.preventDefault();
-    e.stopPropagation(); // stop screen swipe from triggering
-    curX=dx;
-    cardEl.style.transform=`translateX(${curX}px)`;
+    if(!drag)return;
+    var pt=e.touches?e.touches[0]:e;
+    var dx=pt.clientX-sx,dy=pt.clientY-sy;
+    if(horiz===null){if(Math.abs(dx)<8&&Math.abs(dy)<8)return;horiz=Math.abs(dx)>Math.abs(dy)*1.5;}
+    if(!horiz)return;
+    e.preventDefault();e.stopPropagation();cx=dx;el.style.transform='translateX('+cx+'px)';
   }
   function onEnd(e){
-    if(!dragging||isHoriz===false){dragging=false;return;}
-    if(isHoriz) e.stopPropagation();
-    dragging=false;
-    cardEl.classList.add('snapping');
-    const done=hLog(today(),hid).done;
-    if(curX>THRESHOLD&&!done){
-      // swipe right = mark done → slide off and hide from today
-      cardEl.style.transform='translateX(115%)';
-      setTimeout(()=>{
-        togH(hid);
-        // after togH triggers render, card is gone from today view
-      },220);
-    } else if(curX<-THRESHOLD&&done){
-      // swipe left = undo done → slide off
-      cardEl.style.transform='translateX(-115%)';
-      setTimeout(()=>{ togH(hid); },220);
-    } else {
-      cardEl.style.transform='translateX(0)';
-    }
-    curX=0;
+    if(!drag||horiz===false){drag=false;return;}
+    if(horiz)e.stopPropagation();
+    drag=false;el.classList.add('snap');
+    var done=hLog(today(),hid).done;
+    if(cx>70&&!done){el.style.transform='translateX(115%)';setTimeout(function(){togH(hid);},220);}
+    else if(cx<-70&&done){el.style.transform='translateX(-115%)';setTimeout(function(){togH(hid);},220);}
+    else{el.style.transform='translateX(0)';}
+    cx=0;
   }
- 
-  cardEl.addEventListener('touchstart',onStart,{passive:true});
-  cardEl.addEventListener('touchmove',onMove,{passive:false});
-  cardEl.addEventListener('touchend',onEnd,{passive:false});
-  cardEl.addEventListener('mousedown',onStart);
-  window.addEventListener('mousemove',onMove);
-  window.addEventListener('mouseup',onEnd);
+  el.addEventListener('touchstart',onStart,{passive:true});
+  el.addEventListener('touchmove',onMove,{passive:false});
+  el.addEventListener('touchend',onEnd,{passive:false});
 }
  
-/* ═══════════════ CALORIES ═══════════════ */
-function mac(dt){return(S.foods[dt]||[]).reduce((a,f)=>({cal:a.cal+(+f.cal||0),carb:a.carb+(+f.carb||0),prot:a.prot+(+f.prot||0),fat:a.fat+(+f.fat||0)}),{cal:0,carb:0,prot:0,fat:0});}
-/* ── FOOD MODAL & DETAIL ── */
-let detailFood=null;
-let curMeal='breakfast';
-let foodCache={};let fcIdx=0;
+// ═══ TODAY ═══
+function rToday(){
+  var el=document.getElementById('s0');if(!el)return;
+  var d=today(),m=macros(d),w=S.water[d]||0;
+  var pct=Math.min(100,Math.round(m.cal/S.calGoal*100));
+  var rem=Math.max(0,S.calGoal-Math.round(m.cal));
+  var wPct=S.waterGoal>0?Math.min(100,Math.round(w/S.waterGoal*100)):0;
+  var doneH=S.habits.filter(function(h){return hLog(d,h.id).done;}).length;
+  var totalH=S.habits.filter(function(h){return isHabitDue(h,d);}).length;
+  var dn=new Date().toLocaleDateString('en',{weekday:'long'});
+  var ds=new Date().toLocaleDateString('en',{month:'short',day:'numeric'});
+  var R=42,circ=+(2*Math.PI*R).toFixed(2),fill=+(circ-(pct/100)*circ).toFixed(2);
+  var rc=pct>=100?'var(--red)':'var(--accent)';
+  var glasses=Math.round(S.waterGoal/250);
+  var wHtml='';
+  for(var i=1;i<=glasses;i++){wHtml+='<div style="width:34px;height:34px;border-radius:8px;background:'+(w>=i*250?'rgba(96,165,250,.18)':'var(--surf)')+';border:1px solid '+(w>=i*250?'var(--blue)':'var(--border)')+';display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .13s" onclick="tapW('+(i*250)+')">💧</div>';}
+  var hHtml=S.habits.filter(function(h){return isHabitDue(h,d);}).map(function(h){
+    var log=hLog(d,h.id);
+    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;cursor:pointer;border:2.5px solid '+(log.done?'transparent':h.color)+';background:'+(log.done?h.color:'transparent')+';display:flex;align-items:center;justify-content:center" onclick="togH(\''+h.id+'\')">'+(log.done?chkSvg('#fff'):'')+'</div>'
+      +'<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;'+(log.done?'text-decoration:line-through;opacity:.4':'')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+h.name+'</div>'+(log.note?'<div style="font-size:11px;color:var(--sub);margin-top:1px">"'+log.note.substring(0,40)+'"</div>':'')+'</div>'
+      +'<div style="font-family:var(--fm);font-size:11px;color:var(--sub)">🔥'+streak(h)+'</div>'
+      +'</div>';
+  }).join('');
+  el.innerHTML=hdr(dn,ds)
+    +'<div class="card">'
+    +'<div style="display:flex;align-items:center;gap:18px;margin-bottom:14px">'
+    +'<div style="position:relative;width:96px;height:96px;flex-shrink:0">'
+    +'<svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="'+R+'" fill="none" stroke="var(--surf)" stroke-width="10" style="transform:rotate(-90deg);transform-origin:center"/><circle cx="48" cy="48" r="'+R+'" fill="none" stroke="'+rc+'" stroke-width="10" stroke-dasharray="'+circ+'" stroke-dashoffset="'+fill+'" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .5s"/></svg>'
+    +'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div style="font-family:var(--fm);font-size:17px;font-weight:600">'+pct+'%</div><div style="font-size:9px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px">goal</div></div></div>'
+    +'<div><div style="font-family:var(--fm);font-size:34px;font-weight:600;color:var(--accent);line-height:1">'+Math.round(m.cal)+'</div><div style="font-size:12px;color:var(--sub);margin-top:4px">kcal consumed</div><div style="font-size:12px;color:var(--sub);margin-top:2px">'+rem+' remaining</div></div></div>'
+    +'<div style="display:flex;gap:7px">'
+    +'<div style="flex:1;background:var(--surf);border-radius:10px;padding:9px 5px;text-align:center"><div style="font-family:var(--fm);font-size:13px;font-weight:600;color:var(--yellow)">'+Math.round(m.carb)+'g</div><div style="font-size:9px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:2px">Carbs</div></div>'
+    +'<div style="flex:1;background:var(--surf);border-radius:10px;padding:9px 5px;text-align:center"><div style="font-family:var(--fm);font-size:13px;font-weight:600;color:var(--accent)">'+Math.round(m.prot)+'g</div><div style="font-size:9px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:2px">Protein</div></div>'
+    +'<div style="flex:1;background:var(--surf);border-radius:10px;padding:9px 5px;text-align:center"><div style="font-family:var(--fm);font-size:13px;font-weight:600;color:var(--pink)">'+Math.round(m.fat)+'g</div><div style="font-size:9px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:2px">Fat</div></div>'
+    +'</div></div>'
+    +'<div class="card"><div class="sl-lbl">Habits Today <span style="color:var(--accent);font-family:var(--fm)">'+doneH+'/'+totalH+'</span></div>'
+    +(totalH===0?'<div class="es" style="padding:16px 0"><div class="ei">🎯</div><p>No habits due today.<br>Add some in Habits tab.</p></div>':hHtml)
+    +'</div>'
+    +'<div class="card"><div class="sl-lbl">Water <span style="color:var(--blue);font-family:var(--fm)">'+(w/1000).toFixed(2)+'L / '+(S.waterGoal/1000).toFixed(1)+'L</span></div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 10px">'+wHtml+'</div>'
+    +'<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--sub);margin-bottom:5px"><span>Each 💧 = 250ml</span><span>'+wPct+'%</span></div>'
+    +'<div class="pb" style="height:6px"><div class="pbf" style="width:'+wPct+'%;background:var(--blue)"></div></div>'
+    +'</div>';
+}
+function tapW(ml){var d=today();var c=S.water[d]||0;S.water[d]=ml<=c&&ml>c-250?c-250:ml;if(S.water[d]<0)S.water[d]=0;save();render();}
  
+// ═══ HABITS SCREEN ═══
+function rHabits(){
+  var el=document.getElementById('s1');if(!el)return;
+  var d=today();
+  var tabs=['Today','Weekly','Overall'];
+  var tabHtml='<div style="display:flex;gap:4px;margin:12px 18px 0;background:var(--surf);border-radius:14px;padding:4px;position:relative">'
+    +'<div style="position:absolute;top:4px;bottom:4px;width:calc(33.33% - 3px);background:var(--card);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.2);transition:left .28s cubic-bezier(.4,0,.2,1);pointer-events:none;left:'+(habitTab===0?'4px':habitTab===1?'calc(33.33% + 2px)':'calc(66.66%)' )+'"></div>'
+    +tabs.map(function(t,i){return'<button style="flex:1;padding:8px 0;border:none;border-radius:10px;background:none;color:'+(i===habitTab?'var(--text)':'var(--sub)')+';font-family:var(--f1);font-size:13px;font-weight:700;cursor:pointer;position:relative;z-index:1" onclick="habitTab='+i+';render()">'+t+'</button>';}).join('')
+    +'</div>';
+  var total=S.habits.length;
+  var doneCount=S.habits.filter(function(h){return hLog(d,h.id).done;}).length;
+  var pct=total>0?Math.round(doneCount/total*100):0;
+  var statusHtml='<div style="padding:10px 18px 12px;display:flex;flex-direction:column;gap:5px">'
+    +'<div style="height:4px;background:var(--surf);border-radius:100px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--accent);border-radius:100px;transition:width .4s"></div></div>'
+    +'<div style="font-size:13px;font-weight:600;color:'+(doneCount===total&&total>0?'var(--accent)':'#e55')+'">'+doneCount+' completed</div>'
+    +'</div>';
+  var body='';
+  if(habitTab===0){
+    if(total===0){body='<div class="es"><div class="ei">🎯</div><p>No habits yet.<br>Tap <b>+</b> to add your first.</p></div>';}
+    else{
+      body+='<div style="display:flex;justify-content:space-between;padding:0 18px 10px;font-size:11px;color:var(--sub)"><span>← swipe left to undo</span><span>swipe right to done →</span></div>';
+      body+='<div style="padding:0 16px;display:flex;flex-direction:column;gap:10px">';
+      var ungrouped=S.habits.filter(function(h){return !h.groupId&&!hLog(d,h.id).done&&isHabitDue(h,d);});
+      ungrouped.forEach(function(h){body+=habitCard(h,hLog(d,h.id));});
+      S.hgroups.forEach(function(g){
+        var gHabits=S.habits.filter(function(h){return h.groupId===g.id&&!hLog(d,h.id).done&&isHabitDue(h,d);});
+        var collapsed=collGrps[g.id];
+        var gDone=S.habits.filter(function(h){return h.groupId===g.id&&hLog(d,h.id).done;}).length;
+        var gTotal=S.habits.filter(function(h){return h.groupId===g.id;}).length;
+        body+='<div style="margin-bottom:2px">'
+          +'<div id="grph-'+g.id+'" class="grp-hdr" style="border-radius:'+(collapsed?'16px':'16px 16px 0 0')+'" onclick="togGrp(\''+g.id+'\')">'
+          +'<span id="grpc-'+g.id+'" class="grp-chev" style="transform:rotate('+(collapsed?'0':'90')+'deg)">▶</span>'
+          +'<div style="flex:1;font-weight:700;font-size:15px">'+g.name+'</div>'
+          +'<div style="font-size:11px;color:var(--sub);font-family:var(--fm)">'+gDone+'/'+gTotal+'</div>'
+          +'<button onclick="event.stopPropagation();delHGroup(\''+g.id+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--sub);padding:0 4px">🗑️</button>'
+          +'</div>'
+          +'<div id="grpb-'+g.id+'" class="grp-body" style="background:var(--surf);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;padding-top:0;padding-bottom:0;display:flex;flex-direction:column;gap:7px;height:'+(collapsed?'0':'auto')+';overflow:hidden;'+(collapsed?'border:none;':'')+'">';
+        gHabits.forEach(function(h){var log=hLog(d,h.id);body+='<div class="hcw" id="hcw-'+h.id+'" style="height:56px;margin:0 4px">'+'<div class="hcbg L" style="border-radius:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>'+'<div class="hcbg R" style="border-radius:12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>'+'<div class="hcard'+(log.done?' done':'')+' snap" id="hc-'+h.id+'" style="background:'+h.color+';border-radius:12px" onclick="openNote(\''+h.id+'\')">'+'<div class="ck" style="width:24px;height:24px" onclick="event.stopPropagation();togH(\''+h.id+'\')">'+(log.done?chkSvg(h.color):'')+'</div>'+'<div class="nm" style="font-size:14px">'+h.name+'</div>'+'<div class="st">'+(streak(h)>0?'🔥'+streak(h):'')+'</div>'+'</div></div>';});
+        body+='<div data-gid="'+g.id+'" onclick="addHToGrpDirect(this.dataset.gid)" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:var(--card);border-radius:10px;cursor:pointer;border:1.5px dashed var(--border);font-size:12px;color:var(--sub);font-weight:700">+ Add habit</div>'
+          +'</div></div>';
+      });
+      body+='</div>';
+    }
+  } else if(habitTab===1){
+    var weekStart=new Date();var dow=weekStart.getDay();weekStart.setDate(weekStart.getDate()-(dow===0?6:dow-1));
+    var week7=[];for(var wi=0;wi<7;wi++){var wd=new Date(weekStart);wd.setDate(wd.getDate()+wi);week7.push(wd.toISOString().slice(0,10));}
+    var todayMonIdx=new Date().getDay();todayMonIdx=todayMonIdx===0?6:todayMonIdx-1;
+    var WKL=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    var WKS=['Mo','Tu','We','Th','Fr','Sa','Su'];
+    if(total===0){body='<div class="es"><div class="ei">📅</div><p>No habits yet.</p></div>';}
+    else{
+      body='<div style="padding:0 16px;display:flex;flex-direction:column;gap:12px">';
+      S.habits.forEach(function(h){
+        var dotsHtml='';
+        week7.forEach(function(dt,i){
+          var done=hLog(dt,h.id).done,isT=dt===today(),fut=isFut(dt);
+          var bg=done?'rgba(255,255,255,.9)':'rgba(255,255,255,.18)';
+          var bdr=isT?'2px solid rgba(255,255,255,.9)':'2px solid transparent';
+          var onclick=fut?'':('togH(\''+h.id+'\',\''+dt+'\')');
+          dotsHtml+='<div style="display:flex;flex-direction:column;align-items:center;gap:7px;flex:1">'
+            +'<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,'+(isT?1:.55)+')">'+WKL[i]+'</div>'
+            +'<div onclick="'+onclick+'" style="width:34px;height:34px;border-radius:50%;background:'+bg+';border:'+bdr+';display:flex;align-items:center;justify-content:center;cursor:'+(fut?'default':'pointer')+';opacity:'+(fut?.3:1)+';transition:all .15s">'+(done?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="'+h.color+'" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':'')+'</div>'
+            +'</div>';
+        });
+        body+='<div style="background:'+h.color+';border-radius:20px;padding:16px 18px 18px">'
+          +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'
+          +'<div style="font-size:17px;font-weight:800;color:#fff;letter-spacing:-.2px">'+h.name+'</div>'
+          +'<div style="font-size:13px;font-weight:800;color:rgba(255,255,255,.6)">'+WKS[todayMonIdx]+'</div></div>'
+          +'<div style="display:flex;justify-content:space-between;gap:2px">'+dotsHtml+'</div></div>';
+      });
+      body+='</div>';
+    }
+  } else {
+    var COLS=15,ROWS=6,DB=COLS*ROWS;
+    var gridDates=[];for(var gi=0;gi<DB;gi++)gridDates.push(dOff(gi-(DB-1)));
+    if(total===0){body='<div class="es"><div class="ei">📊</div><p>No habits yet.</p></div>';}
+    else{
+      body='<div style="padding:0 16px;display:flex;flex-direction:column;gap:12px">';
+      S.habits.forEach(function(h){
+        var tdDone=hLog(today(),h.id).done;var s=streak(h);
+        var dotsHtml='';
+        gridDates.forEach(function(dt){
+          var done=hLog(dt,h.id).done,isT=dt===today(),fut=isFut(dt);
+          var onclick=fut?'':('togH(\''+h.id+'\',\''+dt+'\')');
+          dotsHtml+='<div onclick="'+onclick+'" style="aspect-ratio:1;border-radius:50%;background:'+(done?h.color:'var(--surf)')+';opacity:'+(fut?.15:done?1:.3)+';'+(isT?'box-shadow:0 0 0 2px '+h.color+',0 0 0 3px var(--card);':'')+' cursor:'+(fut?'default':'pointer')+'"></div>';
+        });
+        body+='<div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px">'
+          +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
+          +'<div style="font-size:15px;font-weight:800">'+h.name+'</div>'
+          +'<div onclick="togH(\''+h.id+'\')" style="width:36px;height:36px;border-radius:10px;background:'+(tdDone?h.color:'var(--surf)')+';border:'+(tdDone?'none':'1px solid var(--border)')+';display:flex;align-items:center;justify-content:center;cursor:pointer">'+(tdDone?chkSvg('#fff'):'')+'</div>'
+          +'</div>'
+          +'<div style="display:grid;grid-template-columns:repeat('+COLS+',1fr);gap:4px">'+dotsHtml+'</div>'
+          +(s>0?'<div style="margin-top:10px;font-size:11px;color:var(--sub)">🔥 <span style="font-family:var(--fm);color:var(--accent)">'+s+'</span> day streak</div>':'')
+          +'</div>';
+      });
+      body+='</div>';
+    }
+  }
+  el.innerHTML=hdr('Habits',total+' habit'+(total!==1?'s':''))+tabHtml+statusHtml+body+'<div style="height:30px"></div>';
+  if(habitTab===0){
+    setTimeout(function(){
+      S.habits.filter(function(h){return isHabitDue(h,d);}).forEach(function(h){
+        var el2=document.getElementById('hc-'+h.id);if(el2)attachSwipe(el2,h.id);
+      });
+    },50);
+  }
+}
+function habitCard(h,log){
+  return '<div class="hcw" id="hcw-'+h.id+'">'
+    +'<div class="hcbg L"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>'
+    +'<div class="hcbg R"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>'
+    +'<div class="hcard'+(log.done?' done':'')+'" id="hc-'+h.id+'" style="background:'+h.color+'" onclick="openNote(&quot;'+h.id+'&quot;)">'
+    +'<div class="ck" onclick="event.stopPropagation();togH(&quot;'+h.id+'&quot;)">'+(log.done?chkSvg(h.color):'')+'</div>'
+    +'<div class="nm">'+h.name+'</div>'
+    +'<div class="st">'+(streak(h)>0?'🔥'+streak(h):'')+'</div>'
+    +'</div></div>';
+}
+function addHToGrpDirect(gid){curGid=gid;var g=S.hgroups.find(function(x){return x.id===gid;});if(g){document.getElementById('hg2-title').textContent=g.name;var list=S.habits.filter(function(h){return h.groupId===gid;});var e=document.getElementById('hg2-list');if(e)e.innerHTML=list.map(function(h){return'<div style="padding:9px 12px;background:'+h.color+';border-radius:12px;color:#fff;font-weight:700;font-size:14px">'+h.name+'</div>';}).join('');selCol2=CARD_COLORS[0];rSwatches();openM('m-hgroup2');};}
+ 
+// Swipe between habit tabs
+document.getElementById('s1').addEventListener('touchstart',function(e){if(e.target.closest('.hcw')||e.target.closest('.hcard')){this._tsx=null;return;}this._tsx=e.touches[0].clientX;this._tsy=e.touches[0].clientY;this._tsw=false;},{passive:true});
+document.getElementById('s1').addEventListener('touchmove',function(e){
+  if(!this._tsx)return;
+  if(e.target.closest('.hcw')||e.target.closest('.hcard')){this._tsw=false;return;}
+  var dx=e.touches[0].clientX-this._tsx,dy=e.touches[0].clientY-this._tsy;
+  if(Math.abs(dx)>Math.abs(dy)*1.5&&Math.abs(dx)>10){this._tsw=true;}
+},{passive:true});
+document.getElementById('s1').addEventListener('touchend',function(e){
+  if(!this._tsw)return;
+  var dx=e.changedTouches[0].clientX-this._tsx;
+  if(dx<-70&&habitTab<2){habitTab++;render();}
+  else if(dx>70&&habitTab>0){habitTab--;render();}
+  else if(dx<-90&&curScreen<4){nav(curScreen+1,'r');}
+  else if(dx>90&&curScreen>0){nav(curScreen-1,'l');}
+  this._tsx=null;this._tsw=false;
+},{passive:true});
+ 
+// ═══ MACROS ═══
+function macros(dt){
+  return(S.foods[dt]||[]).reduce(function(a,f){return{cal:a.cal+(+f.cal||0),carb:a.carb+(+f.carb||0),prot:a.prot+(+f.prot||0),fat:a.fat+(+f.fat||0)};},{cal:0,carb:0,prot:0,fat:0});
+}
+ 
+// ═══ CALORIES ═══
+function rCalories(){
+  var el=document.getElementById('s2');if(!el)return;
+  var d=today(),m=macros(d);
+  var pct=Math.min(100,Math.round(m.cal/S.calGoal*100));
+  var foods=S.foods[d]||[];
+  var grade='A',gBg='rgba(74,222,128,.15)',gC='var(--green)';
+  if(pct>115){grade='D';gBg='rgba(248,113,113,.15)';gC='var(--red)';}
+  else if(pct>100){grade='C';gBg='rgba(251,191,36,.15)';gC='var(--yellow)';}
+  else if(pct>80){grade='B';gBg='rgba(94,234,212,.15)';gC='var(--accent)';}
+  else if(pct<20&&foods.length){grade='F';gBg='rgba(248,113,113,.15)';gC='var(--red)';}
+  var mr=[{l:'Carbs',v:Math.round(m.carb),c:'var(--yellow)',p:Math.min(100,Math.round(m.carb/250*100))},{l:'Protein',v:Math.round(m.prot),c:'var(--accent)',p:Math.min(100,Math.round(m.prot/120*100))},{l:'Fat',v:Math.round(m.fat),c:'var(--pink)',p:Math.min(100,Math.round(m.fat/65*100))}];
+  var ringsHtml=mr.map(function(r){return'<div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1"><div style="position:relative;width:54px;height:54px">'+mRing(r.p,r.c,54,5)+'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:'+r.c+'">'+r.p+'%</span></div></div><div style="font-family:var(--fm);font-size:12px;font-weight:600;color:'+r.c+'">'+r.v+'g</div><div style="font-size:10px;color:var(--sub);font-weight:600">'+r.l+'</div></div>';}).join('');
+  var hero='<div class="card">'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">'
+    +'<div><h2 style="font-family:var(--f2);font-size:22px;font-weight:800;line-height:1">'+Math.round(m.cal)+' <span style="font-size:14px;color:var(--sub);font-family:var(--f1);font-weight:500">kcal</span></h2>'
+    +'<div style="font-size:12px;color:var(--sub);margin-top:3px">'+Math.max(0,S.calGoal-Math.round(m.cal))+' remaining · goal '+S.calGoal+'</div></div>'
+    +'<div style="width:44px;height:44px;border-radius:12px;background:'+gBg+';display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-size:20px;font-weight:800;color:'+gC+'">'+grade+'</div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;justify-content:space-around;margin-bottom:14px">'+ringsHtml+'</div>'
+    +'<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:var(--sub)">Progress</span><strong style="font-family:var(--fm);font-size:11px">'+pct+'%</strong></div>'
+    +'<div class="pb" style="height:8px"><div class="pbf" style="width:'+pct+'%;background:'+(pct>=100?'var(--red)':'var(--accent)')+'"></div></div>'
+    +'</div>';
+  var mealHtml='';
+  ['breakfast','lunch','dinner','snacks'].forEach(function(mid){
+    var cfg=MCFG[mid];var mf=foods.filter(function(f){return f.meal===mid;});
+    var mc=mf.reduce(function(s,f){return s+(+f.cal||0);},0);
+    mealHtml+='<div style="margin:0 16px 10px">'
+      +'<div class="meal-hdr'+(mf.length===0?' empty':'')+'">'
+      +'<div style="display:flex;align-items:center;gap:9px"><span style="font-size:18px">'+cfg.icon+'</span><div><div style="font-family:var(--f2);font-size:13px;font-weight:700">'+cfg.label+'</div><div style="font-family:var(--fm);font-size:11px;color:var(--sub)">'+Math.round(mc)+' kcal</div></div></div>'
+      +'<button onclick="openFoodModal(\''+mid+'\')" style="width:26px;height:26px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .12s">+</button>'
+      +'</div>';
+    if(mf.length){
+      mealHtml+='<div class="meal-body">';
+      mf.forEach(function(f){
+        mealHtml+='<div class="fi">'
+          +'<div style="width:8px;height:8px;border-radius:50%;background:'+cfg.color+';flex-shrink:0"></div>'
+          +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.name+'</div>'
+          +'<div style="font-size:11px;color:var(--sub);margin-top:2px">C:'+Math.round(f.carb)+'g · P:'+Math.round(f.prot)+'g · F:'+Math.round(f.fat)+'g</div></div>'
+          +'<div style="font-family:var(--fm);font-size:13px;font-weight:600;flex-shrink:0">'+Math.round(f.cal)+'</div>'
+          +'<button onclick="delFood(\''+f.id+'\')" style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:15px;padding:0 2px;flex-shrink:0">×</button>'
+          +'</div>';
+      });
+      mealHtml+='</div>';
+    }
+    mealHtml+='</div>';
+  });
+  // calorie history
+  var histHtml='<div class="card"><div class="sl-lbl">Past 7 Days</div>';
+  for(var hi=7;hi>=1;hi--){
+    var hdt=dOff(-hi);var hm=macros(hdt);var hp=Math.min(100,Math.round(hm.cal/S.calGoal*100));
+    var hdlbl=new Date(hdt+'T12:00:00').toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'});
+    var hbc=hp>=100?'var(--red)':hp>0?'var(--accent)':'var(--surf)';
+    histHtml+='<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="font-size:11px;color:var(--sub);width:80px;flex-shrink:0">'+hdlbl+'</div>'
+      +'<div style="flex:1;height:6px;background:var(--surf);border-radius:100px;overflow:hidden"><div style="height:100%;width:'+hp+'%;background:'+hbc+';border-radius:100px"></div></div>'
+      +'<div style="font-family:var(--fm);font-size:11px;color:var(--sub);min-width:55px;text-align:right">'+Math.round(hm.cal)+' kcal</div>'
+      +'</div>';
+  }
+  histHtml+='</div>';
+  el.innerHTML=hdr('Calories',Math.round(m.cal)+' / '+S.calGoal+' kcal today')+hero+mealHtml+histHtml+'<div style="height:20px"></div>';
+}
+function delFood(id){var d=today();S.foods[d]=(S.foods[d]||[]).filter(function(f){return f.id!==id;});save();render();}
+ 
+// ═══ FOOD MODAL ═══
 function openFoodModal(meal){
-  curMeal=meal||'breakfast';
-  foodCache={};fcIdx=0;
-  const inp=document.getElementById('f-search');
-  if(inp)inp.value='';
-  renderFoodModalBody();
+  curMeal=meal||'breakfast';foodCache={};fcIdx=0;
+  var inp=document.getElementById('f-search');if(inp)inp.value='';
   openM('m-food');
 }
-function onFSearch(){
-  const q=document.getElementById('f-search').value.trim();
-  if(!q)renderFoodModalBody();
-}
-function renderFoodModalBody(){
-  const el=document.getElementById('fm-body');if(!el)return;
-  const q=document.getElementById('f-search').value.trim();
-  if(q)return;
-  let html='';
-  const favs=S.favorites||[];const recs=S.recents||[];
-  if(favs.length){
-    html+=`<div class="fm-sec-lbl">❤️ Favorites</div>`;
-    html+=favs.map(f=>{const k='fv'+(++fcIdx);foodCache[k]=f;return fliItem(f,k,true);}).join('');
-  }
-  if(recs.length){
-    html+=`<div class="fm-sec-lbl">🕐 Recently tracked</div>`;
-    html+=recs.slice(0,12).map(f=>{const k='rc'+(++fcIdx);foodCache[k]=f;return fliItem(f,k,false);}).join('');
-  }
-  if(!favs.length&&!recs.length){
-    html+=`<div style="text-align:center;padding:26px 0;color:var(--sub);font-size:13px">Search for food above<br>or add manually ↓</div>`;
-  }
-  html+=`<div style="margin-top:10px"><button class="btn bg" style="width:100%" onclick="openManualEntry()">✏️ Add manually (custom)</button></div>`;
+function onFSearch(){var q=document.getElementById('f-search').value.trim();if(!q)renderFMBody();}
+function renderFMBody(){
+  var el=document.getElementById('fm-body');if(!el)return;
+  var q=document.getElementById('f-search').value.trim();if(q)return;
+  var html='';
+  if(S.favorites.length){html+='<div class="fls">❤️ Favorites</div>';S.favorites.forEach(function(f){var k='fv'+(++fcIdx);foodCache[k]=f;html+=fliHtml(f,k,true);});}
+  if(S.recents.length){html+='<div class="fls">🕐 Recently tracked</div>';S.recents.slice(0,12).forEach(function(f){var k='rc'+(++fcIdx);foodCache[k]=f;html+=fliHtml(f,k,false);});}
+  if(!S.favorites.length&&!S.recents.length){html+='<div style="text-align:center;padding:26px 0;color:var(--sub);font-size:13px">Search for food above<br>or add manually ↓</div>';}
+  html+='<div style="margin-top:10px"><button class="btn bg" style="width:100%" onclick="openManualEntry()">✏️ Add manually</button></div>';
   el.innerHTML=html;
 }
-function fliItem(f,key,isFav){
-  return `<div class="fli" onclick="openFoodDetail(foodCache['${key}'])">
-    <div class="fli-info">
-      <div class="fli-name">${f.name}</div>
-      <div class="fli-meta">${f.cal} kcal · ${f.baseQty} ${f.baseUnit}</div>
-    </div>
-    ${isFav?'<span style="font-size:14px;flex-shrink:0">❤️</span>':''}
-    <div style="font-family:var(--fm);font-size:12px;color:var(--accent);flex-shrink:0">${f.cal}</div>
-  </div>`;
+function fliHtml(f,key,isFav){
+  return '<div class="fli" onclick="openFoodDetail(foodCache[\''+key+'\'])">'
+    +'<div style="flex:1;min-width:0"><div class="fli-n">'+f.name+'</div><div class="fli-m">'+f.cal+' kcal · '+f.bq+' '+f.bu+'</div></div>'
+    +(isFav?'<span style="font-size:14px;flex-shrink:0">❤️</span>':'')
+    +'<div style="font-family:var(--fm);font-size:12px;color:var(--accent);flex-shrink:0">'+f.cal+'</div>'
+    +'</div>';
 }
 function openFoodDetail(food){
-  detailFood={...food};
+  detailFood=Object.assign({},food);
   document.getElementById('fd-name').textContent=food.name;
-  document.getElementById('fd-source').textContent=food.isOffline?'Local database':'Open Food Facts';
-  document.getElementById('fd-qty').value=food.baseQty;
-  document.getElementById('fd-unit').value=food.baseUnit||'serving';
+  document.getElementById('fd-src').textContent=food.offline?'Local database':'Open Food Facts';
+  document.getElementById('fd-qty').value=food.bq;
+  document.getElementById('fd-unit').value=food.bu||'serving';
   document.getElementById('fd-meal').value=curMeal;
   document.getElementById('fd-manual').style.display='none';
-  const isFav=(S.favorites||[]).some(x=>x.name===food.name);
-  document.getElementById('fd-fav-btn').textContent=isFav?'❤️':'🤍';
-  updateFoodDetail();
-  openM('m-fdetail');
+  var isFav=S.favorites.some(function(x){return x.name===food.name;});
+  document.getElementById('fd-fav').textContent=isFav?'❤️':'🤍';
+  updateFD();openM('m-fdetail');
 }
 function openManualEntry(){
-  detailFood={name:'',cal:0,carb:0,prot:0,fat:0,baseQty:1,baseUnit:'serving',isOffline:true,isManual:true};
+  detailFood={name:'',cal:0,carb:0,prot:0,fat:0,bq:1,bu:'serving',offline:true,manual:true};
   document.getElementById('fd-name').textContent='Custom food';
-  document.getElementById('fd-source').textContent='Manual entry';
-  document.getElementById('fd-qty').value=1;
-  document.getElementById('fd-unit').value='serving';
-  document.getElementById('fd-meal').value=curMeal;
-  document.getElementById('fd-fav-btn').textContent='🤍';
+  document.getElementById('fd-src').textContent='Manual entry';
+  document.getElementById('fd-qty').value=1;document.getElementById('fd-unit').value='serving';
+  document.getElementById('fd-meal').value=curMeal;document.getElementById('fd-fav').textContent='🤍';
   document.getElementById('fd-manual').style.display='block';
-  document.getElementById('fd-manname').value='';
-  ['fd-cal','fd-carb','fd-prot','fd-fat'].forEach(id=>document.getElementById(id).value='');
-  updateFoodDetail();
-  openM('m-fdetail');
+  ['fd-mname','fd-mcal','fd-mcarb','fd-mprot','fd-mfat'].forEach(function(i){document.getElementById(i).value='';});
+  updateFD();openM('m-fdetail');
 }
-function updateFoodDetail(){
+function updateFD(){
   if(!detailFood)return;
-  let cal=detailFood.cal,carb=detailFood.carb,prot=detailFood.prot,fat=detailFood.fat;
-  if(detailFood.isManual){
-    cal=+document.getElementById('fd-cal').value||0;
-    carb=+document.getElementById('fd-carb').value||0;
-    prot=+document.getElementById('fd-prot').value||0;
-    fat=+document.getElementById('fd-fat').value||0;
+  var cal=detailFood.cal,carb=detailFood.carb,prot=detailFood.prot,fat=detailFood.fat;
+  if(detailFood.manual){
+    cal=+document.getElementById('fd-mcal').value||0;carb=+document.getElementById('fd-mcarb').value||0;
+    prot=+document.getElementById('fd-mprot').value||0;fat=+document.getElementById('fd-mfat').value||0;
     detailFood.cal=cal;detailFood.carb=carb;detailFood.prot=prot;detailFood.fat=fat;
   }
-  const qty=Math.max(0.01,+document.getElementById('fd-qty').value||1);
-  const ratio=qty/(detailFood.baseQty||1);
-  const tCal=Math.round(cal*ratio);
-  const tCarb=+(carb*ratio).toFixed(1);
-  const tProt=+(prot*ratio).toFixed(1);
-  const tFat=+(fat*ratio).toFixed(1);
-  document.getElementById('fd-cal-num').textContent=tCal;
-  const fC=tCarb*4,fP=tProt*4,fF=tFat*9,tot=fC+fP+fF||1;
-  const macros=[
-    {l:'Carbs',v:tCarb,pct:Math.round(fC/tot*100),c:'#fbbf24'},
-    {l:'Protein',v:tProt,pct:Math.round(fP/tot*100),c:'var(--accent)'},
-    {l:'Fat',v:tFat,pct:Math.round(fF/tot*100),c:'#f472b6'},
-  ];
-  document.getElementById('fd-rings').innerHTML=macros.map(m=>`
-    <div class="fd-macro-ring-wrap">
-      <div style="position:relative;width:64px;height:64px">
-        ${mRing(m.pct,m.c,64,7)}
-        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-          <span style="font-size:12px;font-weight:700;color:${m.c}">${m.pct}%</span>
-        </div>
-      </div>
-      <div style="font-family:var(--fm);font-size:12px;font-weight:600">${m.v}g</div>
-      <div style="font-size:10px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.3px">${m.l}</div>
-    </div>`).join('');
-  document.getElementById('fd-macrovals').innerHTML=macros.map(m=>`
-    <div class="ms" style="flex:1">
-      <div class="ms-v" style="color:${m.c}">${m.v}g</div>
-      <div class="ms-l">${m.l}</div>
-    </div>`).join('');
+  var qty=Math.max(0.01,+document.getElementById('fd-qty').value||1);
+  var ratio=qty/(detailFood.bq||1);
+  var tc=Math.round(cal*ratio),tca=+(carb*ratio).toFixed(1),tp=+(prot*ratio).toFixed(1),tf=+(fat*ratio).toFixed(1);
+  document.getElementById('fd-cal').textContent=tc;
+  var fC=tca*4,fP=tp*4,fF=tf*9,tot=fC+fP+fF||1;
+  var macArr=[{l:'Carbs',v:tca,pct:Math.round(fC/tot*100),c:'var(--yellow)'},{l:'Protein',v:tp,pct:Math.round(fP/tot*100),c:'var(--accent)'},{l:'Fat',v:tf,pct:Math.round(fF/tot*100),c:'var(--pink)'}];
+  document.getElementById('fd-rings').innerHTML=macArr.map(function(m){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">'
+      +'<div style="position:relative;width:64px;height:64px">'+mRing(m.pct,m.c,64,7)
+      +'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;font-weight:700;color:'+m.c+'">'+m.pct+'%</span></div></div>'
+      +'<div style="font-family:var(--fm);font-size:12px;font-weight:600;color:'+m.c+'">'+m.v+'g</div>'
+      +'<div style="font-size:10px;color:var(--sub);font-weight:600">'+m.l+'</div></div>';
+  }).join('');
 }
 function toggleFav(){
   if(!detailFood)return;
-  const entry={name:detailFood.name,cal:detailFood.cal,carb:detailFood.carb,prot:detailFood.prot,fat:detailFood.fat,baseQty:detailFood.baseQty,baseUnit:detailFood.baseUnit,isOffline:detailFood.isOffline};
-  if(!S.favorites)S.favorites=[];
-  const idx=S.favorites.findIndex(x=>x.name===entry.name);
-  if(idx>=0){S.favorites.splice(idx,1);document.getElementById('fd-fav-btn').textContent='🤍';toast('Removed from favorites');}
-  else{S.favorites.unshift(entry);document.getElementById('fd-fav-btn').textContent='❤️';toast('Added to favorites ❤️');}
+  var entry={name:detailFood.name,cal:detailFood.cal,carb:detailFood.carb,prot:detailFood.prot,fat:detailFood.fat,bq:detailFood.bq,bu:detailFood.bu,offline:detailFood.offline};
+  var idx=S.favorites.findIndex(function(x){return x.name===entry.name;});
+  if(idx>=0){S.favorites.splice(idx,1);document.getElementById('fd-fav').textContent='🤍';toast('Removed from favorites');}
+  else{S.favorites.unshift(entry);document.getElementById('fd-fav').textContent='❤️';toast('Added to favorites ❤️');}
   save();
 }
 function trackFood(){
   if(!detailFood)return;
-  const qty=Math.max(0.01,+document.getElementById('fd-qty').value||1);
-  const unit=document.getElementById('fd-unit').value;
-  const meal=document.getElementById('fd-meal').value;
-  const ratio=qty/(detailFood.baseQty||1);
-  let name=detailFood.name;
-  if(detailFood.isManual){name=document.getElementById('fd-manname').value.trim()||'Custom food';}
-  const d=today();if(!S.foods[d])S.foods[d]=[];
-  S.foods[d].push({
-    id:Date.now().toString(),
-    name:`${name} (${qty} ${unit})`,
-    meal,
-    cal:Math.round(detailFood.cal*ratio),
-    carb:+(detailFood.carb*ratio).toFixed(1),
-    prot:+(detailFood.prot*ratio).toFixed(1),
-    fat:+(detailFood.fat*ratio).toFixed(1),
-  });
-  if(!S.recents)S.recents=[];
-  const recEntry={name,cal:detailFood.cal,carb:detailFood.carb,prot:detailFood.prot,fat:detailFood.fat,baseQty:detailFood.baseQty,baseUnit:detailFood.baseUnit,isOffline:detailFood.isOffline};
-  S.recents=[recEntry,...S.recents.filter(r=>r.name!==name)].slice(0,20);
-  save();
-  document.getElementById('f-search').value='';
-  closeM('m-fdetail');closeM('m-food');
-  toast('Logged! 🍽️');render();
+  var qty=Math.max(0.01,+document.getElementById('fd-qty').value||1);
+  var unit=document.getElementById('fd-unit').value;
+  var meal=document.getElementById('fd-meal').value;
+  var ratio=qty/(detailFood.bq||1);
+  var name=detailFood.name;
+  if(detailFood.manual){name=document.getElementById('fd-mname').value.trim()||'Custom food';}
+  var d=today();if(!S.foods[d])S.foods[d]=[];
+  S.foods[d].push({id:'f'+Date.now(),name:name+' ('+qty+' '+unit+')',meal:meal,cal:Math.round(detailFood.cal*ratio),carb:+(detailFood.carb*ratio).toFixed(1),prot:+(detailFood.prot*ratio).toFixed(1),fat:+(detailFood.fat*ratio).toFixed(1)});
+  var rec={name:name,cal:detailFood.cal,carb:detailFood.carb,prot:detailFood.prot,fat:detailFood.fat,bq:detailFood.bq,bu:detailFood.bu,offline:detailFood.offline};
+  S.recents=[rec].concat(S.recents.filter(function(r){return r.name!==name;})).slice(0,20);
+  save();document.getElementById('f-search').value='';closeM('m-fdetail');closeM('m-food');toast('Logged! 🍽️');render();
 }
-function delF(id){const d=today();S.foods[d]=(S.foods[d]||[]).filter(f=>f.id!==id);save();render();}
-function addToMeal(meal){openFoodModal(meal);}
 async function doSearch(){
-  const q=document.getElementById('f-search').value.trim();if(!q)return;
-  const fmb=document.getElementById('fm-body');
-  const ql=q.toLowerCase();
-  const off=OFFL.filter(f=>f.name.toLowerCase().includes(ql));
-  const manualBtn=`<div style="margin-top:10px"><button class="btn bg" style="width:100%" onclick="openManualEntry()">✏️ Add manually</button></div>`;
+  var q=document.getElementById('f-search').value.trim();if(!q)return;
+  var fmb=document.getElementById('fm-body');
+  var ql=q.toLowerCase();
+  var off=OFFL.filter(function(f){return f.n.toLowerCase().includes(ql);});
+  var manBtn='<div style="margin-top:10px"><button class="btn bg" style="width:100%" onclick="openManualEntry()">✏️ Add manually</button></div>';
   if(off.length){
-    fmb.innerHTML=`<div class="fm-sec-lbl">🔍 Results</div>`+off.slice(0,6).map(f=>{
-      const k='sr'+(++fcIdx);
-      foodCache[k]={name:f.name,cal:f.cal,carb:f.carb,prot:f.prot,fat:f.fat,baseQty:1,baseUnit:'serving',isOffline:true};
-      return `<div class="fli" onclick="openFoodDetail(foodCache['${k}'])"><div class="fli-info"><div class="fli-name">${f.name}</div><div class="fli-meta">${f.cal} kcal · 1 serving</div></div><div style="font-family:var(--fm);font-size:12px;color:var(--accent)">${f.cal}</div></div>`;
-    }).join('')+manualBtn;return;
+    var h='<div class="fls">🔍 Results</div>';
+    off.slice(0,6).forEach(function(f){var k='sr'+(++fcIdx);foodCache[k]={name:f.n,cal:f.c,carb:f.cb,prot:f.p,fat:f.f,bq:1,bu:'serving',offline:true};h+='<div class="fli" onclick="openFoodDetail(foodCache[\''+k+'\'])"><div style="flex:1;min-width:0"><div class="fli-n">'+f.n+'</div><div class="fli-m">'+f.c+' kcal · 1 serving</div></div><div style="font-family:var(--fm);font-size:12px;color:var(--accent)">'+f.c+'</div></div>';});
+    fmb.innerHTML=h+manBtn;return;
   }
   fmb.innerHTML='<div class="spin"></div>';
   try{
-    const r=await fetch(`https://world.openfoodfacts.org/cgi/search.pl?action=process&json=true&search_terms=${encodeURIComponent(q)}&fields=product_name,nutriments&page_size=8`);
-    const data=await r.json();
-    const prods=(data.products||[]).filter(p=>p.product_name?.trim());
-    if(!prods.length){fmb.innerHTML=`<div style="text-align:center;padding:16px;font-size:12px;color:var(--sub)">No results found.</div>`+manualBtn;return;}
-    fmb.innerHTML=`<div class="fm-sec-lbl">🔍 Results <span style="opacity:.5">(per 100g)</span></div>`+prods.slice(0,6).map(p=>{
-      const n=p.nutriments||{};const nm=(p.product_name||'').substring(0,55);
-      const cal=Math.round(n['energy-kcal_100g']||0),carb=Math.round(n['carbohydrates_100g']||0),prot=Math.round(n['proteins_100g']||0),fat=Math.round(n['fat_100g']||0);
-      const k='sr'+(++fcIdx);
-      foodCache[k]={name:nm,cal,carb,prot,fat,baseQty:100,baseUnit:'g',isOffline:false};
-      return `<div class="fli" onclick="openFoodDetail(foodCache['${k}'])"><div class="fli-info"><div class="fli-name">${nm}</div><div class="fli-meta">${cal} kcal · per 100g</div></div><div style="font-family:var(--fm);font-size:12px;color:var(--accent)">${cal}</div></div>`;
-    }).join('')+manualBtn;
-  }catch(e){
-    const fb=OFFL.filter(f=>f.name.toLowerCase().includes(ql));
-    fmb.innerHTML=`<div class="fm-sec-lbl">🔍 Local results</div>`+(fb.length?fb.slice(0,5).map(f=>{
-      const k='sr'+(++fcIdx);foodCache[k]={name:f.name,cal:f.cal,carb:f.carb,prot:f.prot,fat:f.fat,baseQty:1,baseUnit:'serving',isOffline:true};
-      return `<div class="fli" onclick="openFoodDetail(foodCache['${k}'])"><div class="fli-info"><div class="fli-name">${f.name}</div><div class="fli-meta">${f.cal} kcal · 1 serving</div></div><div style="font-family:var(--fm);font-size:12px;color:var(--accent)">${f.cal}</div></div>`;
-    }).join(''):`<div style="text-align:center;padding:12px;font-size:12px;color:var(--sub)">No matches.</div>`)+manualBtn;
-  }
-}
- 
-function tapW(g){const d=today();const c=S.water[d]||0;S.water[d]=g<=c?g-1:g;save();render();}
-function openSets(){document.getElementById('s-cal').value=S.calGoal;document.getElementById('s-water').value=S.waterGoal;openM('m-set');}
-function saveSets(){S.calGoal=Math.max(500,Math.min(5000,+document.getElementById('s-cal').value||2000));S.waterGoal=Math.max(1,Math.min(20,+document.getElementById('s-water').value||8));save();closeM('m-set');toast('Goals saved ✅');render();}
-function rSw(){document.getElementById('sw-row').innerHTML=CARD_COLORS.map(c=>`<div class="sw ${c===selCol?'sel':''}" style="background:${c}" onclick="selCol='${c}';rSw()"></div>`).join('');}
- 
-function chk(col){return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${col||'#1a1a2e'}" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`;}
-function mRing(pct,color,sz=52,sw=5){const R=(sz-sw)/2,c=+(2*Math.PI*R).toFixed(2),f=+(c-(Math.min(100,pct)/100)*c).toFixed(2);return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="transform:rotate(-90deg)"><circle cx="${sz/2}" cy="${sz/2}" r="${R}" fill="none" stroke="var(--surf)" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${R}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-dasharray="${c}" stroke-dashoffset="${f}" stroke-linecap="round" style="transition:stroke-dashoffset .5s"/></svg>`;}
- 
-function topBar(t,sub){return `<div class="hdr"><div class="hdr-row"><h1>${t}</h1><div class="hdr-acts"><div class="tog" onclick="togTheme()"></div><button class="ib" onclick="openSets()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></button></div></div>${sub?`<div style="font-size:12px;color:var(--sub);margin-top:2px">${sub}</div>`:''}</div>`;}
- 
-/* ═══════════════ RENDER ═══════════════ */
- 
-function habitCard(h,log){
-  return `<div class="h-card-wrap" id="cwrap-${h.id}">
-    <div class="h-card-bg h-card-bg-left">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
-    <div class="h-card-bg h-card-bg-right">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </div>
-    <div class="h-card ${log.done?'done':''}" id="hcard-${h.id}" style="background:${h.color}" onclick="handleCardTap('${h.id}')">
-      <div class="h-card-check" onclick="event.stopPropagation();togH('${h.id}')">${log.done?chk(h.color):''}</div>
-      <div class="h-card-name">${h.name}</div>
-      <div class="h-card-streak">${streak(h)>0?`🔥${streak(h)}`:''}</div>
-    </div>
-  </div>`;
-}
- 
-function render(){rToday();rHabits();rCalories();rTodo();rAna();rSw();}
- 
-/* ─── TODAY ─── */
-function rToday(){
-  const el=document.getElementById('s-today');
-  const d=today();const m=mac(d);
-  const pct=Math.min(100,Math.round(m.cal/S.calGoal*100));
-  const rem=Math.max(0,S.calGoal-m.cal);
-  const w=S.water[d]||0;const wPct=Math.min(100,Math.round(w/S.waterGoal*100));
-  const done=S.habits.filter(h=>hLog(d,h.id).done).length;
-  const R=42,circ=+(2*Math.PI*R).toFixed(2),fill=+(circ-(pct/100)*circ).toFixed(2);
-  const rc=pct>=100?'#f87171':'var(--accent)';
-  const dn=new Date().toLocaleDateString('en',{weekday:'long'});
-  const ds=new Date().toLocaleDateString('en',{month:'short',day:'numeric'});
-  el.innerHTML=`${topBar(dn,ds)}
-  <div class="t-cal">
-    <div class="ring-row">
-      <div class="rw">
-        <svg width="96" height="96" viewBox="0 0 96 96">
-          <circle cx="48" cy="48" r="${R}" fill="none" stroke="var(--surf)" stroke-width="10" style="transform:rotate(-90deg);transform-origin:center"/>
-          <circle cx="48" cy="48" r="${R}" fill="none" stroke="${rc}" stroke-width="10" stroke-dasharray="${circ}" stroke-dashoffset="${fill}" stroke-linecap="round" style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset .5s"/>
-        </svg>
-        <div class="ri"><div class="ri-pct">${pct}%</div><div class="ri-lbl">goal</div></div>
-      </div>
-      <div>
-        <div style="font-family:var(--fm);font-size:36px;font-weight:600;color:var(--accent);line-height:1">${Math.round(m.cal)}</div>
-        <div style="font-size:12px;color:var(--sub);margin-top:4px">kcal consumed</div>
-        <div style="font-size:12px;color:var(--sub);margin-top:2px">${Math.round(rem)} remaining</div>
-      </div>
-    </div>
-    <div class="ms-row">
-      <div class="ms"><div class="ms-v" style="color:#fbbf24">${Math.round(m.carb)}g</div><div class="ms-l">Carbs</div></div>
-      <div class="ms"><div class="ms-v" style="color:var(--accent)">${Math.round(m.prot)}g</div><div class="ms-l">Protein</div></div>
-      <div class="ms"><div class="ms-v" style="color:#f472b6">${Math.round(m.fat)}g</div><div class="ms-l">Fat</div></div>
-    </div>
-  </div>
-  <div class="t-hcard">
-    <div class="sec-lbl">Habits Today <span style="color:var(--accent);font-family:var(--fm)">${done}/${S.habits.length}</span></div>
-    ${S.habits.length===0?`<div class="empty-s" style="padding:16px 0"><div class="ei">🎯</div><p>No habits yet.<br>Add some in the Habits tab.</p></div>`
-    :S.habits.map(h=>{const log=hLog(d,h.id);return `<div class="th">
-      <div class="thck ${log.done?'done':''}" style="${log.done?'background:'+h.color:'border-color:'+h.color}" onclick="togH('${h.id}')">${log.done?chk('#fff'):''}</div>
-      <div style="flex:1;min-width:0">
-        <div class="th-n ${log.done?'done':''}">${h.name}</div>
-        ${log.note?`<div style="font-size:11px;color:var(--sub);margin-top:1px">"${log.note.substring(0,42)}${log.note.length>42?'…':''}"</div>`:''}
-      </div>
-      <div style="font-family:var(--fm);font-size:11px;color:var(--sub)">🔥${streak(h)}</div>
-    </div>`}).join('')}
-  </div>
-  <div class="wcard">
-    <div class="sec-lbl">Water <span style="color:#60a5fa;font-family:var(--fm)">${w}/${S.waterGoal}</span></div>
-    <div class="wgg">${Array.from({length:S.waterGoal},(_,i)=>`<div class="wg ${i<w?'on':''}" onclick="tapW(${i+1})">💧</div>`).join('')}</div>
-    <div class="pb" style="height:6px"><div class="pbf" style="width:${wPct}%;background:#60a5fa"></div></div>
-  </div>`;
-}
- 
-/* ─── HABITS ─── */
-function rHabits(){
-  const el=document.getElementById('s-habits');
-  const d=today();
-  const doneCount=S.habits.filter(h=>hLog(d,h.id).done).length;
-  const total=S.habits.length;
-  const pct=total>0?Math.round(doneCount/total*100):0;
- 
-  let tabContent='';
-  if(habitTab==='today'){
-    if(total===0){
-      tabContent=`<div class="empty-s"><div class="ei">🎯</div><p>No habits yet.<br>Tap <b>+</b> to add your first habit.</p></div>`;
-    } else {
-      tabContent=`<div style="display:flex;justify-content:space-between;padding:0 20px 10px;font-size:11px;color:var(--sub)">
-        <span>← swipe left to undo</span>
-        <span>swipe right to done →</span>
-      </div>`;
-      tabContent+=`<div class="h-cards">`;
- 
-      // ungrouped habits first
-      // Today tab — only show habits not yet done (done ones disappear after swipe)
-      const ungrouped=S.habits.filter(h=>!h.groupId&&!hLog(d,h.id).done);
-      for(const h of ungrouped){
-        const log=hLog(d,h.id);
-        tabContent+=habitCard(h,log);
-      }
- 
-      // then groups
-      for(const g of (S.groups||[])){
-        const gHabits=S.habits.filter(h=>h.groupId===g.id&&!hLog(d,h.id).done);
-        if(!gHabits.length)continue;
-        const collapsed=collapsedGroups[g.id];
-        const gDone=gHabits.filter(h=>hLog(d,h.id).done).length;
-        tabContent+=`
-          <div style="margin-bottom:8px">
-            <div id="grp-hdr-${g.id}" class="grp-header" onclick="togGroup('${g.id}')" style="border-radius:${collapsed?'16px':'16px 16px 0 0'}">
-              <span id="grp-chev-${g.id}" class="grp-chevron ${collapsed?'':'open'}">▶</span>
-              <div style="flex:1;font-weight:700;font-size:15px">${g.name}</div>
-              <div style="font-size:12px;color:var(--sub);font-family:var(--fm)">${gDone}/${gHabits.length}</div>
-              <button onclick="event.stopPropagation();delGroup('${g.id}')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--sub);padding:0 4px">🗑️</button>
-            </div>
-            <div id="grp-body-${g.id}" class="grp-body ${collapsed?'':'open expanded'}" style="
-              background:var(--bg2);border:1px solid var(--border);border-top:none;
-              border-radius:0 0 16px 16px;display:flex;flex-direction:column;gap:7px;
-              height:${collapsed?'0':'auto'};
-            ">
-              ${gHabits.map(h=>{
-                const log=hLog(d,h.id);
-                return `<div class="h-card-wrap" id="cwrap-${h.id}" style="height:62px">
-                  <div class="h-card-bg h-card-bg-left">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  </div>
-                  <div class="h-card-bg h-card-bg-right">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </div>
-                  <div class="h-card ${log.done?'done':''}" id="hcard-${h.id}" style="background:${h.color}" onclick="handleCardTap('${h.id}')">
-                    <div class="h-card-check" onclick="event.stopPropagation();togH('${h.id}')">${log.done?chk(h.color):''}</div>
-                    <div class="h-card-name" style="font-size:15px">${h.name}</div>
-                    <div class="h-card-streak">${streak(h)>0?`🔥${streak(h)}`:''}</div>
-                  </div>
-                </div>`;
-              }).join('')}
-              ${collapsed?'':'<div onclick="addHabitToGroup(\'${g.id}\')" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;margin-top:2px;background:var(--surf);border-radius:10px;cursor:pointer;border:1.5px dashed var(--border);font-size:12px;color:var(--sub);font-weight:700;"><span style=\"font-size:15px\">+</span> Add habit to this group</div>'}
-            </div>
-          </div>`;
-      }
- 
-      tabContent+=`</div>`;
-    }
- 
-  } else if(habitTab==='weekly'){
-    if(total===0){
-      tabContent=`<div class="empty-s"><div class="ei">📅</div><p>No habits to show yet.</p></div>`;
-    } else {
-      const weekStart=new Date();
-      const dow=weekStart.getDay();
-      weekStart.setDate(weekStart.getDate()-(dow===0?6:dow-1)); // back to Monday
-      const week7=Array.from({length:7},(_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return d.toISOString().slice(0,10);});
-      const WK_LABELS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-      const WK_SHORT=['Mo','Tu','We','Th','Fr','Sa','Su'];
-      const todayMonIdx=(()=>{const d=new Date().getDay();return d===0?6:d-1;})();
-      tabContent=`<div style="padding:0 16px;display:flex;flex-direction:column;gap:12px">`;
-      for(const h of S.habits){
-        tabContent+=`<div style="background:${h.color};border-radius:20px;padding:16px 18px 18px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div style="font-size:17px;font-weight:800;color:#fff;letter-spacing:-.2px">${h.name}</div>
-            <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,.6)">${WK_SHORT[todayMonIdx]}</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;gap:2px">
-            ${week7.map((dt,i)=>{
-              const done=hLog(dt,h.id).done;
-              const isT=dt===today();
-              const fut=isFuture(dt);
-              return `<div style="display:flex;flex-direction:column;align-items:center;gap:7px;flex:1">
-                <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,${isT?1:.55})">${WK_LABELS[i]}</div>
-                <div onclick="${fut?'':'togHDay(\''+h.id+'\',\''+dt+'\')' }"
-                  style="width:34px;height:34px;border-radius:50%;
-                  background:${done?'rgba(255,255,255,0.9)':'rgba(255,255,255,0.18)'};
-                  border:2px solid ${isT?'rgba(255,255,255,0.9)':'transparent'};
-                  display:flex;align-items:center;justify-content:center;
-                  cursor:${fut?'default':'pointer'};
-                  opacity:${fut?0.3:1};transition:all .15s">
-                  ${done?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${h.color}" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}
-                </div>
-              </div>`;
-            }).join('')}
-          </div>
-        </div>`;
-      }
-      tabContent+=`</div>`;
-    }
-  } else {
-    // overall — dot grid heatmap
-    if(total===0){
-      tabContent=`<div class="empty-s"><div class="ei">📊</div><p>No habits yet.</p></div>`;
-    } else {
-      const COLS=15,ROWS=6,DAYS_BACK=COLS*ROWS;
-      const gridDates=Array.from({length:DAYS_BACK},(_,i)=>dOff(i-(DAYS_BACK-1)));
-      tabContent=`<div style="padding:0 16px;display:flex;flex-direction:column;gap:12px">`;
-      for(const h of S.habits){
-        const todayDone=hLog(today(),h.id).done;
-        const s=streak(h);
-        tabContent+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 16px 14px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <div style="font-size:15px;font-weight:800">${h.name}</div>
-            <div style="width:36px;height:36px;border-radius:10px;
-              background:${todayDone?h.color:'var(--surf)'};
-              border:${todayDone?'none':'1px solid var(--border)'};
-              display:flex;align-items:center;justify-content:center;
-              cursor:pointer;transition:all .15s"
-              onclick="togH('${h.id}')">
-              ${todayDone?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`:''}
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(${COLS},1fr);gap:4px">
-            ${gridDates.map(dt=>{
-              const done=hLog(dt,h.id).done;
-              const isT=dt===today();
-              const fut=isFuture(dt);
-              return `<div onclick="${fut?'':'togHDay(\''+h.id+'\',\''+dt+'\')' }"
-                style="aspect-ratio:1;border-radius:50%;
-                background:${done?h.color:'var(--surf)'};
-                opacity:${fut?0.15:done?1:0.3};
-                ${isT?'box-shadow:0 0 0 2px '+h.color+',0 0 0 3px var(--card);':''}
-                cursor:${fut?'default':'pointer'};
-                transition:background .15s">
-              </div>`;
-            }).join('')}
-          </div>
-          ${s>0?`<div style="margin-top:10px;font-size:11px;color:var(--sub)">🔥 <span style="font-family:var(--fm);color:var(--accent)">${s}</span> day streak</div>`:''}
-        </div>`;
-      }
-      tabContent+=`</div>`;
-    }
-  }
- 
-  el.innerHTML=`${topBar('Habits')}
-  <div class="h-tabs" id="h-tabs-wrap" style="position:relative">
-    <div id="h-pill" style="
-      position:absolute;
-      top:4px;bottom:4px;
-      width:calc(33.33% - 3px);
-      background:var(--card);
-      border-radius:10px;
-      box-shadow:0 2px 8px rgba(0,0,0,.2);
-      transition:left 0.28s cubic-bezier(0.4,0,0.2,1);
-      left:${habitTab==='today'?'4px':habitTab==='weekly'?'calc(33.33% + 2px)':'calc(66.66% + 0px)'};
-      pointer-events:none;
-    "></div>
-    <button class="h-tab ${habitTab==='today'?'active':''}" onclick="setHTab('today')" style="position:relative;z-index:1">Today</button>
-    <button class="h-tab ${habitTab==='weekly'?'active':''}" onclick="setHTab('weekly')" style="position:relative;z-index:1">Weekly</button>
-    <button class="h-tab ${habitTab==='overall'?'active':''}" onclick="setHTab('overall')" style="position:relative;z-index:1">Overall</button>
-  </div>
-  <div class="h-status">
-    <div class="h-progress-bar"><div class="h-progress-fill" style="width:${pct}%"></div></div>
-    <div class="h-done-count ${doneCount===total&&total>0?'all':''}">${doneCount} completed</div>
-  </div>
-  ${tabContent}
-  <div style="height:30px"></div>`;
- 
-  // Attach swipe only in today tab
-  if(habitTab==='today'){
-    requestAnimationFrame(()=>{
-      S.habits.forEach(h=>{
-        const card=document.getElementById('hcard-'+h.id);
-        if(card)attachSwipe(card,h.id);
-      });
+    var r=await fetch('https://world.openfoodfacts.org/cgi/search.pl?action=process&json=true&search_terms='+encodeURIComponent(q)+'&fields=product_name,nutriments&page_size=8');
+    var data=await r.json();
+    var prods=(data.products||[]).filter(function(p){return p.product_name&&p.product_name.trim();});
+    if(!prods.length){fmb.innerHTML='<div style="text-align:center;padding:16px;font-size:12px;color:var(--sub)">No results found.</div>'+manBtn;return;}
+    var h2='<div class="fls">🔍 Results <span style="opacity:.5">(per 100g)</span></div>';
+    prods.slice(0,6).forEach(function(p){
+      var n2=p.nutriments||{};var nm=(p.product_name||'').substring(0,55);
+      var cal=Math.round(n2['energy-kcal_100g']||0),carb=Math.round(n2['carbohydrates_100g']||0),prot=Math.round(n2['proteins_100g']||0),fat2=Math.round(n2['fat_100g']||0);
+      var k='sr'+(++fcIdx);foodCache[k]={name:nm,cal:cal,carb:carb,prot:prot,fat:fat2,bq:100,bu:'g',offline:false};
+      h2+='<div class="fli" onclick="openFoodDetail(foodCache[\''+k+'\'])"><div style="flex:1;min-width:0"><div class="fli-n">'+nm+'</div><div class="fli-m">'+cal+' kcal · per 100g</div></div><div style="font-family:var(--fm);font-size:12px;color:var(--accent)">'+cal+'</div></div>';
     });
+    fmb.innerHTML=h2+manBtn;
+  }catch(e){
+    var fb=OFFL.filter(function(f){return f.n.toLowerCase().includes(ql);});
+    var h3='<div class="fls">🔍 Local results</div>';
+    if(fb.length){fb.slice(0,5).forEach(function(f){var k='sr'+(++fcIdx);foodCache[k]={name:f.n,cal:f.c,carb:f.cb,prot:f.p,fat:f.f,bq:1,bu:'serving',offline:true};h3+='<div class="fli" onclick="openFoodDetail(foodCache[\''+k+'\'])"><div style="flex:1;min-width:0"><div class="fli-n">'+f.n+'</div><div class="fli-m">'+f.c+' kcal</div></div><div style="font-family:var(--fm);font-size:12px;color:var(--accent)">'+f.c+'</div></div>';});}
+    else h3+='<div style="text-align:center;padding:12px;font-size:12px;color:var(--sub)">No matches.</div>';
+    fmb.innerHTML=h3+manBtn;
   }
 }
  
-let cardTapTimer={};
-function handleCardTap(hid){
-  // On tap (no swipe), open weekly detail
-  openWeekDetail(hid);
+// ═══ TODO ═══
+function rTodo(){
+  var el=document.getElementById('s3');if(!el)return;
+  var total=S.todos.length,done=S.todos.filter(function(t){return t.done;}).length;
+  var pct=total>0?Math.round(done/total*100):0;
+  var priO={high:0,med:1,low:2};
+  function sortTodos(arr){return arr.slice().sort(function(a,b){if(a.done!==b.done)return a.done?1:-1;if(a.done)return 0;var pd=(priO[a.priority]||1)-(priO[b.priority]||1);if(pd!==0)return pd;if(a.due&&b.due)return a.due.localeCompare(b.due);if(a.due)return -1;if(b.due)return 1;return 0;});}
+  function todoCard(t){
+    var priC=t.priority==='high'?'var(--red)':t.priority==='low'?'var(--green)':'var(--yellow)';
+    var isOver=t.due&&!t.done&&t.due<today();
+    var isToday2=t.due&&!t.done&&t.due===today();
+    var dueLbl='';
+    if(t.due){var ds2=new Date(t.due+'T12:00:00').toLocaleDateString('en',{month:'short',day:'numeric'});var dc=isOver?'var(--red)':isToday2?'var(--yellow)':'var(--sub)';var dp=isOver?'⚠️ Overdue · ':isToday2?'📅 Due today · ':'📅 ';dueLbl='<div style="font-size:10px;margin-top:2px;color:'+dc+'">'+dp+ds2+'</div>';}
+    var bd=isOver?'rgba(248,113,113,.35)':'var(--border)';var bg=isOver?'rgba(248,113,113,.05)':'var(--card)';
+    var ck2='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    return '<div class="todo-card" style="border-color:'+bd+';background:'+bg+';'+(t.done?'opacity:.45;':'')+'">'
+      +'<div onclick="togTodo(\''+t.id+'\')" style="width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid '+(t.done?'var(--accent)':'var(--border)')+';background:'+(t.done?'var(--accent)':'transparent')+';display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s">'+(t.done?ck2:'')+'</div>'
+      +'<div style="width:7px;height:7px;border-radius:50%;background:'+priC+';flex-shrink:0;margin-top:3px"></div>'
+      +'<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;'+(t.done?'text-decoration:line-through;':'')+' white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+t.title+'</div>'+dueLbl+'</div>'
+      +'<button onclick="delTodo(\''+t.id+'\')" style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:15px;padding:0 2px">×</button>'
+      +'</div>';
+  }
+  function renderGroup(gid,depth){
+    var g=S.tgroups.find(function(x){return x.id===gid;});if(!g)return'';
+    var cGroups=S.tgroups.filter(function(x){return x.parentId===gid;});
+    var cTodos=sortTodos(S.todos.filter(function(t){return t.groupId===gid;}));
+    var coll=_collTGrps[gid];var gDone=cTodos.filter(function(t){return t.done;}).length;
+    var ind=depth*12;var br=coll?'16px':'16px 16px 0 0';
+    var h='<div style="margin-bottom:8px;margin-left:'+ind+'px">'
+      +'<div onclick="togTGrp(\''+gid+'\')" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:'+br+';cursor:pointer;transition:background .15s"><span style="font-size:11px;color:var(--sub);display:inline-block;transform:rotate('+(coll?0:90)+'deg);transition:transform .28s">▶</span><div style="flex:1;font-weight:700;font-size:15px">'+g.name+'</div><div style="font-size:11px;color:var(--sub);font-family:var(--fm)">'+gDone+'/'+cTodos.length+'</div><button onclick="event.stopPropagation();delTGrp(\''+gid+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--sub);padding:0 2px">🗑️</button></div>';
+    if(!coll){
+      h+='<div style="background:var(--surf);border:1px solid var(--border);border-top:none;border-radius:0 0 16px 16px;padding:8px;display:flex;flex-direction:column;gap:6px">';
+      cTodos.forEach(function(t){h+=todoCard(t);});
+      cGroups.forEach(function(cg){h+=renderGroup(cg.id,0);});
+      h+='<div style="display:flex;gap:6px;margin-top:2px">'
+        +'<button data-gid="'+gid+'" onclick="openTodoItem(this.dataset.gid)" style="flex:1;padding:8px;background:var(--card);border:1.5px dashed var(--border);border-radius:10px;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer">+ Add Task</button>'
+        +'<button data-gid="'+gid+'" onclick="openTodoGroup(this.dataset.gid)" style="flex:1;padding:8px;background:var(--card);border:1.5px dashed var(--border);border-radius:10px;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer">📁 Sub-group</button>'
+        +'</div></div>';
+    }
+    h+='</div>';return h;
+  }
+  var rootTodos=sortTodos(S.todos.filter(function(t){return !t.groupId;}));
+  var rootGroups=S.tgroups.filter(function(g){return !g.parentId;});
+  var bodyHtml='';
+  rootGroups.forEach(function(g){bodyHtml+=renderGroup(g.id,0);});
+  rootTodos.forEach(function(t){bodyHtml+=todoCard(t);});
+  if(!bodyHtml)bodyHtml='<div class="es"><div class="ei">📝</div><p>No tasks yet.<br>Tap <b>+</b> to add your first task or group.</p></div>';
+  var progHtml='';
+  if(total>0){progHtml='<div style="margin-top:10px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--sub);margin-bottom:5px"><span>Progress</span><span>'+pct+'%</span></div><div class="pb" style="height:6px"><div class="pbf" style="width:'+pct+'%;background:var(--accent)"></div></div></div>';}
+  el.innerHTML=hdr('Todo',done+'/'+total+' done')+progHtml+'<div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-bottom:20px">'+bodyHtml+'</div>';
+}
+// Also need a separate _collTGrps mapping (already declared as collTGrps at top)
+var _collTGrps=collTGrps;
+ 
+function openTodoItem(pgid){todoParentGid=pgid||null;todoPri='med';document.getElementById('ti-name').value='';document.getElementById('ti-due').value='';document.getElementById('ti-title').textContent=pgid?'Add Task to Group':'New Task';setPri('med');openM('m-titem');}
+function openTodoGroup(pgid){todoParentGid=pgid||null;document.getElementById('tg-name').value='';openM('m-tgroup');}
+function setPri(p){todoPri=p;['low','med','high'].forEach(function(x){var e=document.getElementById('pri-'+x);if(e)e.style.borderColor=x===p?'var(--accent)':'var(--border)';});}
+function saveTodoItem(){
+  var n=document.getElementById('ti-name').value.trim();if(!n){toast('Enter a task name');return;}
+  var due=document.getElementById('ti-due').value||'';
+  S.todos.push({id:'t'+Date.now(),title:n,done:false,groupId:todoParentGid||'',priority:todoPri,due:due,created:today()});
+  save();closeM('m-titem');document.getElementById('ti-due').value='';render();toast('Task added ✅');
+}
+function saveTodoGroup(){
+  var n=document.getElementById('tg-name').value.trim();if(!n){toast('Enter a name');return;}
+  S.tgroups.push({id:'tg'+Date.now(),name:n,parentId:todoParentGid||''});
+  save();closeM('m-tgroup');render();toast('Group created 📁');
+}
+function togTodo(id){var t=S.todos.find(function(x){return x.id===id;});if(!t)return;t.done=!t.done;save();render();}
+function delTodo(id){
+  var t=S.todos.find(function(x){return x.id===id;});if(!t)return;
+  var bak=S.todos.slice(),bidx=S.todos.findIndex(function(x){return x.id===id;});
+  S.todos=S.todos.filter(function(x){return x.id!==id;});save();
+  showUndo('Task deleted 🗑️',function(){S.todos.splice(bidx,0,t);save();renderAll();});
+  rPending=false;render();
+}
+function togTGrp(gid){_collTGrps[gid]=!_collTGrps[gid];render();}
+function delTGrp(gid){
+  var bak={groups:S.tgroups.slice(),todos:S.todos.slice()};
+  S.tgroups=S.tgroups.filter(function(g){return g.id!==gid;});
+  S.todos=S.todos.filter(function(t){return t.groupId!==gid;});
+  save();showUndo('Group deleted 🗑️',function(){S.tgroups=bak.groups;S.todos=bak.todos;save();renderAll();});rPending=false;render();
 }
  
-function setHTab(t){if(t===habitTab)return;habitTab=t;render();}
- 
-/* ─── CALORIES ─── */
-function rCalories(){
-  const el=document.getElementById('s-calories');
-  const d=today();const m=mac(d);
-  const pct=Math.min(100,Math.round(m.cal/S.calGoal*100));
-  const foods=S.foods[d]||[];
-  let grade='A',gBg='rgba(74,222,128,.15)',gC='#4ade80';
-  if(pct>115){grade='D';gBg='rgba(248,113,113,.15)';gC='#f87171';}
-  else if(pct>100){grade='C';gBg='rgba(251,191,36,.15)';gC='#fbbf24';}
-  else if(pct>80){grade='B';gBg='rgba(94,234,212,.15)';gC='#5eead4';}
-  else if(pct<20&&foods.length){grade='F';gBg='rgba(248,113,113,.15)';gC='#f87171';}
-  const mr=[
-    {l:'Carbs',v:Math.round(m.carb),c:'#fbbf24',p:Math.min(100,Math.round(m.carb/250*100))},
-    {l:'Protein',v:Math.round(m.prot),c:'var(--accent)',p:Math.min(100,Math.round(m.prot/120*100))},
-    {l:'Fat',v:Math.round(m.fat),c:'#f472b6',p:Math.min(100,Math.round(m.fat/65*100))},
-  ];
-  el.innerHTML=`${topBar('Calories',Math.round(m.cal)+' / '+S.calGoal+' kcal today')}
-  <div class="ls-hero">
-    <div class="ls-top">
-      <div><h2>${Math.round(m.cal)} <span style="font-size:14px;color:var(--sub);font-family:var(--f1);font-weight:500">kcal</span></h2>
-        <div class="s2">${Math.max(0,S.calGoal-Math.round(m.cal))} remaining · goal ${S.calGoal}</div>
-      </div>
-      <div class="ls-badge" style="background:${gBg};color:${gC}">${grade}</div>
-    </div>
-    <div class="ls-rings">${mr.map(r=>`<div class="lsr">${mRing(r.p,r.c)}<div class="lsr-v" style="color:${r.c}">${r.v}g</div><div class="lsr-l">${r.l}</div></div>`).join('')}</div>
-    <div class="ls-bar-top"><span>Progress</span><strong>${pct}%</strong></div>
-    <div class="pb" style="height:8px"><div class="pbf" style="width:${pct}%;background:${pct>=100?'#f87171':'var(--accent)'}"></div></div>
-  </div>
-  ${Object.entries(MCFG).map(([id,cfg])=>{
-    const mf=foods.filter(f=>f.meal===id);
-    const mc=mf.reduce((s,f)=>s+(+f.cal||0),0);
-    return `<div class="meal-sec">
-      <div class="meal-hdr ${mf.length===0?'empty':''}">
-        <div class="mhl"><span class="meal-ico">${cfg.icon}</span><div><div class="meal-ttl">${cfg.label}</div><div class="meal-cal-sub">${Math.round(mc)} kcal</div></div></div>
-        <button class="meal-add" onclick="openFoodModal('${id}')">+</button>
-      </div>
-      ${mf.length?`<div class="meal-body">${mf.map(f=>`<div class="fi">
-        <div class="fi-dot" style="background:${cfg.color}"></div>
-        <div class="fi-info"><div class="fi-n">${f.name}</div><div class="fi-m">C:${Math.round(f.carb)}g · P:${Math.round(f.prot)}g · F:${Math.round(f.fat)}g</div></div>
-        <div class="fi-cal">${Math.round(f.cal)}</div>
-        <button class="fi-del" onclick="delF('${f.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg></button>
-      </div>`).join('')}</div>`:''}
-    </div>`;
-  }).join('')}
-  <div style="height:20px"></div>`;
+// ═══ STATS ═══
+function rStats(){
+  var el=document.getElementById('s4');if(!el)return;
+  var d=today();var l7=[];for(var i=0;i<7;i++)l7.push(dOff(i-6));
+  var d7=S.habits.reduce(function(s,h){return s+l7.filter(function(dt){return hLog(dt,h.id).done;}).length;},0);
+  var p7=S.habits.length*7;var ovr=p7>0?Math.round(d7/p7*100):0;
+  var best=S.habits.reduce(function(m,h){return Math.max(m,streak(h));},0);
+  var td=S.habits.filter(function(h){return hLog(d,h.id).done;}).length;
+  var calData=l7.map(function(dt){return macros(dt).cal;});
+  var mxC=Math.max.apply(null,calData.concat([S.calGoal,1]));
+  var l30=[];for(var j=0;j<30;j++)l30.push(dOff(j-29));
+  var nz30=l30.map(function(dt){return macros(dt).cal;}).filter(function(c){return c>0;});
+  var avg30=nz30.length?Math.round(nz30.reduce(function(a,b){return a+b;},0)/nz30.length):0;
+  var aw=Math.round(l7.reduce(function(s,dt){return s+(S.water[dt]||0);},0)/7/100)/10;
+  var statsHtml='<div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px 10px">'
+    +'<div class="card" style="text-align:center;padding:14px 12px"><div style="font-family:var(--fm);font-size:28px;font-weight:600;color:var(--accent);line-height:1">'+ovr+'%</div><div style="font-size:10px;color:var(--sub);margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Habit rate 7d</div></div>'
+    +'<div class="card" style="text-align:center;padding:14px 12px"><div style="font-family:var(--fm);font-size:28px;font-weight:600;color:var(--accent);line-height:1">'+best+'</div><div style="font-size:10px;color:var(--sub);margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Best streak 🔥</div></div>'
+    +'<div class="card" style="text-align:center;padding:14px 12px"><div style="font-family:var(--fm);font-size:28px;font-weight:600;color:var(--accent);line-height:1">'+td+'/'+S.habits.length+'</div><div style="font-size:10px;color:var(--sub);margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Today done</div></div>'
+    +'<div class="card" style="text-align:center;padding:14px 12px"><div style="font-family:var(--fm);font-size:28px;font-weight:600;color:var(--accent);line-height:1">'+aw+'L</div><div style="font-size:10px;color:var(--sub);margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Avg water 💧</div></div>'
+    +'</div>';
+  var barsHtml='<div class="card"><div class="sl-lbl" style="margin-bottom:12px">Calories — Last 7 Days</div>'
+    +'<div style="display:flex;align-items:flex-end;gap:5px;height:80px;padding-bottom:2px">';
+  l7.forEach(function(dt,i){
+    var h2=Math.max(3,Math.round((calData[i]/mxC)*76));
+    var col=i===6?'var(--accent)':'var(--purple)';var op=i===6?1:.5;
+    var lbl=['Su','Mo','Tu','We','Th','Fr','Sa'][new Date(dt+'T12:00:00').getDay()];
+    barsHtml+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%">'
+      +'<div style="flex:1;display:flex;align-items:flex-end;width:100%"><div style="width:100%;height:'+h2+'px;border-radius:5px 5px 0 0;background:'+col+';opacity:'+op+'"></div></div>'
+      +'<div style="font-size:9px;color:var(--sub);font-weight:700">'+lbl+'</div>'
+      +'</div>';
+  });
+  barsHtml+='</div><div style="display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--sub)"><span>Goal: '+S.calGoal+'</span><span>30d avg: '+avg30+'</span></div></div>';
+  var habBarsHtml='<div class="card"><div class="sl-lbl" style="margin-bottom:10px">Habit Completion — 7 Days</div>';
+  if(S.habits.length===0){habBarsHtml+='<div style="text-align:center;padding:14px 0;font-size:13px;color:var(--sub)">No habits yet.</div>';}
+  else{S.habits.forEach(function(h){var dn=l7.filter(function(dt){return hLog(dt,h.id).done;}).length;var p2=Math.round(dn/7*100);var s=streak(h);habBarsHtml+='<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)"><div style="width:10px;height:10px;border-radius:50%;background:'+h.color+';flex-shrink:0"></div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px">'+h.name+'</div><div class="pb" style="height:5px"><div class="pbf" style="width:'+p2+'%;background:'+h.color+'"></div></div></div><div style="font-family:var(--fm);font-size:12px;color:var(--sub);min-width:30px;text-align:right">'+p2+'%</div><div style="font-family:var(--fm);font-size:11px;color:var(--sub);min-width:28px">🔥'+s+'</div></div>';});}
+  habBarsHtml+='</div>';
+  el.innerHTML=hdr('Stats','Your progress at a glance')+statsHtml+barsHtml+habBarsHtml+'<div style="height:20px"></div>';
 }
  
-/* ─── ANALYTICS ─── */
-function rAna(){
-  const el=document.getElementById('s-analytics');
-  const d=today();const l7=Array.from({length:7},(_,i)=>dOff(i-6));const l30=Array.from({length:30},(_,i)=>dOff(i-29));
-  const d7=S.habits.reduce((s,h)=>s+l7.filter(dt=>hLog(dt,h.id).done).length,0);
-  const p7=S.habits.length*7;const ovr=p7>0?Math.round(d7/p7*100):0;
-  const best=S.habits.reduce((m,h)=>Math.max(m,streak(h)),0);
-  const td=S.habits.filter(h=>hLog(d,h.id).done).length;
-  const calData=l7.map(dt=>mac(dt).cal);
-  const mxC=Math.max(...calData,S.calGoal,1);
-  const nz30=l30.map(dt=>mac(dt).cal).filter(c=>c>0);
-  const avg30=nz30.length?Math.round(nz30.reduce((a,b)=>a+b,0)/nz30.length):0;
-  const aw=Math.round(l7.reduce((s,dt)=>s+(S.water[dt]||0),0)/7*10)/10;
-  el.innerHTML=`${topBar('Stats','Your progress')}
-  <div class="st-g">
-    <div class="st-c"><div class="st-v">${ovr}%</div><div class="st-l">Habit rate 7d</div></div>
-    <div class="st-c"><div class="st-v">${best}</div><div class="st-l">Best streak 🔥</div></div>
-    <div class="st-c"><div class="st-v">${td}/${S.habits.length}</div><div class="st-l">Today done</div></div>
-    <div class="st-c"><div class="st-v">${aw}</div><div class="st-l">Avg water 💧</div></div>
-  </div>
-  <div class="ana-c">
-    <div class="sec-lbl" style="margin-bottom:12px">Calories — Last 7 Days</div>
-    <div class="bchart">${calData.map((cal,i)=>{const h=Math.max(3,Math.round((cal/mxC)*76));const col=i===6?'var(--accent)':'var(--accent2,#a78bfa)';return `<div class="bc-col"><div class="bc-wr"><div class="bc-b" style="height:${h}px;background:${col};opacity:${i===6?1:.5}"></div></div><div class="bc-l">${dLbl(l7[i])}</div></div>`;}).join('')}</div>
-    <div style="display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--sub)"><span>Goal: ${S.calGoal}</span><span>30d avg: ${avg30}</span></div>
-  </div>
-  <div class="ana-c">
-    <div class="sec-lbl" style="margin-bottom:10px">Habit Completion — 7 Days</div>
-    ${S.habits.length===0?`<div style="text-align:center;padding:14px 0;font-size:13px;color:var(--sub)">No habits yet.</div>`
-    :S.habits.map(h=>{const dn=l7.filter(dt=>hLog(dt,h.id).done).length;const p=Math.round(dn/7*100);const s=streak(h);return `<div class="ha-row">
-      <div style="width:10px;height:10px;border-radius:50%;background:${h.color};flex-shrink:0"></div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px">${h.name}</div>
-        <div class="pb" style="height:5px"><div class="pbf" style="width:${p}%;background:${h.color}"></div></div>
-      </div>
-      <div style="font-family:var(--fm);font-size:12px;color:var(--sub);min-width:30px;text-align:right">${p}%</div>
-      <div style="font-family:var(--fm);font-size:11px;color:var(--sub);min-width:28px">🔥${s}</div>
-    </div>`}).join('')}
-  </div>
-  <div style="height:20px"></div>`;
-}
+// ═══ SETTINGS ═══
+function openSets(){document.getElementById('s-cal').value=S.calGoal;document.getElementById('s-water').value=(S.waterGoal/1000).toFixed(1);openM('m-sets');}
+function saveSets(){S.calGoal=Math.max(500,Math.min(5000,+document.getElementById('s-cal').value||2000));S.waterGoal=Math.round(Math.max(500,Math.min(6000,(+document.getElementById('s-water').value||2.5)*1000)));save();closeM('m-sets');toast('Goals saved ✅');render();}
+// Override ib click for settings — ib buttons now call openM('m-sets') directly via hdr()
+// but openSets() is also called separately
+document.getElementById('s-cal')&&void 0;// just a reference
  
-/* ═══════════════ INIT ═══════════════ */
-load();render();
-if('serviceWorker' in navigator){
-  const sw=`const C='lo-v7';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.open(C).then(c=>c.match(e.request).then(r=>{const n=fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;});return r||n;})));});`;
-  try{navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});}catch(e){}
-}
- 
-/* ═══ SWIPE BETWEEN TABS ═══ */
+// ═══ SWIPE NAV (global) ═══
 (function(){
-  const app=document.getElementById('app');
-  let tx=0,ty=0,locked=null,swiping=false;
- 
-  app.addEventListener('touchstart',e=>{
-    tx=e.touches[0].clientX;
-    ty=e.touches[0].clientY;
-    locked=null;swiping=false;
-  },{passive:true});
- 
-  app.addEventListener('touchmove',e=>{
-    // if touch started on a habit card, don't interfere
-    if(e.target.closest('.h-card')||e.target.closest('.h-card-wrap'))return;
-    const dx=e.touches[0].clientX-tx;
-    const dy=e.touches[0].clientY-ty;
-    if(!locked){
-      if(Math.abs(dx)<10&&Math.abs(dy)<10)return;
-      locked=Math.abs(dx)>Math.abs(dy)*1.5?'h':'v';
-    }
-    if(locked==='h'){
-      const idx=SCREENS.indexOf(cur);
-      if((dx<0&&idx<SCREENS.length-1)||(dx>0&&idx>0)){
-        e.preventDefault();
-        swiping=true;
-      }
-    }
+  var app=document.getElementById('app');
+  var tx=0,ty=0,locked=null,swiping=false;
+  app.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;locked=null;swiping=false;},{passive:true});
+  app.addEventListener('touchmove',function(e){
+    if(e.target.closest('.hcw')||e.target.closest('.hcard'))return;
+    var dx=e.touches[0].clientX-tx,dy=e.touches[0].clientY-ty;
+    if(!locked){if(Math.abs(dx)<10&&Math.abs(dy)<10)return;locked=Math.abs(dx)>Math.abs(dy)*1.5?'h':'v';}
+    if(locked==='h'){var idx=curScreen;if((dx<0&&idx<4)||(dx>0&&idx>0)){e.preventDefault();swiping=true;}}
   },{passive:false});
- 
-  app.addEventListener('touchend',e=>{
+  app.addEventListener('touchend',function(e){
     if(!swiping)return;
-    const dx=e.changedTouches[0].clientX-tx;
-    const HTABS=['today','weekly','overall'];
-    const NAV_THRESHOLD=90; // higher = harder to accidentally switch screens
-    if(cur==='habits'){
-      const hidx=HTABS.indexOf(habitTab);
-      if(dx<-NAV_THRESHOLD&&hidx<HTABS.length-1){setHTab(HTABS[hidx+1]);swiping=false;locked=null;return;}
-      if(dx>NAV_THRESHOLD&&hidx>0){setHTab(HTABS[hidx-1]);swiping=false;locked=null;return;}
-    }
-    const idx=SCREENS.indexOf(cur);
-    if(dx<-NAV_THRESHOLD&&idx<SCREENS.length-1){nav(SCREENS[idx+1],'right');}
-    else if(dx>NAV_THRESHOLD&&idx>0){nav(SCREENS[idx-1],'left');}
+    var dx=e.changedTouches[0].clientX-tx;
+    if(dx<-90&&curScreen<4)nav(curScreen+1,'r');
+    else if(dx>90&&curScreen>0)nav(curScreen-1,'l');
     swiping=false;locked=null;
   },{passive:true});
 })();
  
+// ═══ INIT ═══
+function openSetsFromHdr(){openSets();} // alias
+load();renderAll();
  
-/* ═══════════════ TODO ═══════════════ */
- 
-function openTodoItemModal(parentGid){
-  _todoParentGid=parentGid;
-  _todoPri='med';
-  document.getElementById('ti-name').value='';
-  document.getElementById('todo-item-title').textContent=parentGid?(()=>{const g=S.todoGroups.find(g=>g.id===parentGid);return g?'Add to '+g.name:'New Task';})():'New Task';
-  setPri('med');
-  openM('m-todo-item');
-}
-function setPri(p){
-  _todoPri=p;
-  ['low','med','high'].forEach(x=>{
-    const el=document.getElementById('pri-'+x);
-    if(el)el.style.borderColor=x===p?'var(--accent)':'var(--border)';
-  });
-}
-function saveTodoItem(){
-  const n=document.getElementById('ti-name').value.trim();
-  if(!n){toast('Enter a task name');return;}
-  S.todos.push({id:'t'+Date.now(),title:n,done:false,groupId:_todoParentGid||'',priority:_todoPri,created:today()});
-  save();closeM('m-todo-item');render();toast('Task added ✅');
+if('serviceWorker' in navigator){
+  var sw="const C='lo-v10';self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.open(C).then(c=>c.match(e.request).then(r=>{const n=fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;});return r||n;})));});";
+  try{navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(function(){});}catch(e){}
 }
  
-function openTodoGroupModal(parentGid){
-  _todoParentGid=parentGid;
-  document.getElementById('tg-name').value='';
-  openM('m-todo-group');
+/* ─── UNDO SNACKBAR ─── */
+var _undoFn=null,_undoT=null;
+function showUndo(msg,fn){
+  _undoFn=fn;
+  clearTimeout(_undoT);
+  var bar=document.getElementById('undo-bar');
+  var msgEl=document.getElementById('undo-msg');
+  if(!bar||!msgEl)return;
+  msgEl.textContent=msg;
+  bar.style.bottom='calc(var(--nav,64px) + 16px)';
+  _undoT=setTimeout(function(){
+    bar.style.bottom='-80px';
+    _undoFn=null;
+  },4000);
 }
-function saveTodoGroup(){
-  const n=document.getElementById('tg-name').value.trim();
-  if(!n){toast('Enter a group name');return;}
-  S.todoGroups.push({id:'tg'+Date.now(),name:n,parentId:_todoParentGid||''});
-  save();closeM('m-todo-group');render();toast('Group created 📁');
-}
- 
-function togTodoGroup(gid){_collapsedTodoGroups[gid]=!_collapsedTodoGroups[gid];render();}
- 
-function toggleTodo(id){
-  const t=S.todos.find(t=>t.id===id);if(!t)return;
-  t.done=!t.done;save();render();
-}
-function delTodo(id){
-  const t=S.todos.find(t=>t.id===id);if(!t)return;
-  const backup={todo:{...t},idx:S.todos.findIndex(x=>x.id===id)};
-  S.todos=S.todos.filter(x=>x.id!==id);
-  save();render();
-  toastUndo('Task deleted',()=>{S.todos.splice(backup.idx,0,backup.todo);save();render();});
-}
-function delTodoGroup(gid){
-  const backup={groups:[...S.todoGroups.map(g=>({...g}))],todos:[...S.todos.map(t=>({...t}))]};
-  // recursively collect all child group ids
-  function childIds(pid){
-    const kids=S.todoGroups.filter(g=>g.parentId===pid).map(g=>g.id);
-    return kids.reduce((a,id)=>[...a,...childIds(id)],[...kids]);
-  }
-  const allIds=[gid,...childIds(gid)];
-  S.todoGroups=S.todoGroups.filter(g=>!allIds.includes(g.id));
-  S.todos=S.todos.filter(t=>!allIds.includes(t.groupId));
-  save();render();
-  toastUndo('Group deleted',()=>{S.todoGroups=backup.groups;S.todos=backup.todos;save();render();});
+function doUndo2(){
+  clearTimeout(_undoT);
+  var bar=document.getElementById('undo-bar');
+  if(bar)bar.style.bottom='-80px';
+  if(_undoFn){_undoFn();_undoFn=null;}
 }
  
-/* ── render todo screen ── */
-function rTodo(){
-  const el=document.getElementById('s-todo');if(!el)return;
-  const total=S.todos.length;
-  const done=S.todos.filter(t=>t.done).length;
+/* ─── EDIT HABIT ─── */
+var editHid=null, editDays=[];
+var editCol=CARD_COLORS[0];
  
-  function renderGroup(gid, depth){
-    let html='';
-    const childGroups=S.todoGroups.filter(g=>g.parentId===gid);
-    const childTodos=S.todos.filter(t=>t.groupId===gid);
-    const collapsed=_collapsedTodoGroups[gid];
-    const g=S.todoGroups.find(g=>g.id===gid);
-    if(!g)return '';
-    const gDone=childTodos.filter(t=>t.done).length;
-    const indent=depth*12;
-    html+=`<div style="margin-bottom:8px;margin-left:${indent}px">
-      <div onclick="togTodoGroup('${gid}')" style="
-        display:flex;align-items:center;gap:10px;
-        padding:12px 16px;
-        background:var(--card);border:1px solid var(--border);
-        border-radius:${collapsed?'16px':'16px 16px 0 0'};
-        cursor:pointer;transition:border-radius .2s;
-      ">
-        <span style="font-size:14px;color:var(--sub)">${collapsed?'▶':'▾'}</span>
-        <div style="flex:1;font-weight:700;font-size:15px">${g.name}</div>
-        <div style="font-size:11px;color:var(--sub);font-family:var(--fm)">${gDone}/${childTodos.length}</div>
-        <button onclick="event.stopPropagation();delTodoGroup('${gid}')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--sub);padding:0 2px">🗑️</button>
-      </div>
-      ${collapsed?'':`<div style="
-        background:var(--bg2);border:1px solid var(--border);border-top:none;
-        border-radius:0 0 16px 16px;padding:10px 10px 6px;
-        display:flex;flex-direction:column;gap:6px;
-      ">
-        ${childTodos.map(t=>todoCard(t)).join('')}
-        ${childGroups.map(cg=>renderGroup(cg.id,0)).join('')}
-        <div style="display:flex;gap:6px;margin-top:4px">
-          <button onclick="openTodoItemModal('${gid}')" style="
-            flex:1;padding:8px;background:var(--surf);border:1.5px dashed var(--border);
-            border-radius:10px;color:var(--sub);font-size:12px;font-weight:700;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
-          ">+ Add Task</button>
-          <button onclick="openTodoGroupModal('${gid}')" style="
-            flex:1;padding:8px;background:var(--surf);border:1.5px dashed var(--border);
-            border-radius:10px;color:var(--sub);font-size:12px;font-weight:700;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
-          ">📁 Sub-group</button>
-        </div>
-      </div>`}
-    </div>`;
-    return html;
-  }
- 
-  function todoCard(t){
-    const priColor=t.priority==='high'?'#f87171':t.priority==='low'?'#4ade80':'#fbbf24';
-    const priDot=`<div style="width:7px;height:7px;border-radius:50%;background:${priColor};flex-shrink:0;margin-top:1px"></div>`;
-    return `<div style="
-      display:flex;align-items:center;gap:10px;
-      padding:11px 14px;
-      background:var(--card);border:1px solid var(--border);
-      border-radius:12px;
-      ${t.done?'opacity:0.5':''}
-    ">
-      <div onclick="toggleTodo('${t.id}')" style="
-        width:22px;height:22px;border-radius:50%;flex-shrink:0;
-        border:2px solid ${t.done?'var(--accent)':'var(--border)'};
-        background:${t.done?'var(--accent)':'transparent'};
-        display:flex;align-items:center;justify-content:center;cursor:pointer;
-        transition:all .15s;
-      ">${t.done?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':''}</div>
-      ${priDot}
-      <div style="flex:1;font-size:14px;font-weight:600;${t.done?'text-decoration:line-through':''}">${t.title}</div>
-      <button onclick="delTodo('${t.id}')" style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:15px;padding:0 2px;flex-shrink:0">×</button>
-    </div>`;
-  }
- 
-  // root todos (no group)
-  const rootTodos=S.todos.filter(t=>!t.groupId);
-  // root groups (no parent)
-  const rootGroups=S.todoGroups.filter(g=>!g.parentId);
- 
-  const pct=total>0?Math.round(done/total*100):0;
-  const dayN=new Date().toLocaleDateString('en',{weekday:'long'});
- 
-  el.innerHTML=`
-    <div class="hdr">
-      <div class="hdr-row">
-        <div><h1>Todo</h1><div class="sub">${done}/${total} done today</div></div>
-        <div class="hdr-acts"><div class="tog" onclick="togTheme()"></div></div>
-      </div>
-      ${total>0?`<div style="margin-top:10px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--sub);margin-bottom:5px"><span>Progress</span><span>${pct}%</span></div>
-        <div class="pb" style="height:6px"><div class="pbf" style="width:${pct}%;background:var(--accent)"></div></div>
-      </div>`:''}
-    </div>
- 
-    <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;padding-bottom:20px">
-      ${rootTodos.length===0&&rootGroups.length===0
-        ?`<div class="empty-s"><div class="ei">📝</div><p>No tasks yet.<br>Tap <b>+</b> to add your first task or group.</p></div>`
-        :`${rootGroups.map(g=>renderGroup(g.id,0)).join('')}
-          ${rootTodos.map(t=>todoCard(t)).join('')}`
-      }
-    </div>
-  `;
+function openEditHabit(hid){
+  var h=S.habits.find(function(x){return x.id===hid;});if(!h)return;
+  editHid=hid;
+  editCol=h.color;
+  editDays=(h.freq&&h.freq.length>0)?h.freq.slice():[0,1,2,3,4,5,6];
+  document.getElementById('he-name').value=h.name;
+  renderEditSwatches();
+  renderEditDays();
+  openM('m-hedit');
+}
+function renderEditSwatches(){
+  var el=document.getElementById('sw-edit');if(!el)return;
+  el.innerHTML=CARD_COLORS.map(function(col){
+    return '<div class="sw-dot'+(col===editCol?' sel':'')+'" style="background:'+col+'" data-col="'+col+'" onclick="editCol=this.dataset.col;renderEditSwatches()"></div>';
+  }).join('');
+}
+function renderEditDays(){
+  var el=document.getElementById('he-days');if(!el)return;
+  el.innerHTML=DAYS3.map(function(d,i){
+    return '<button type="button" class="day-btn'+(editDays.indexOf(i)>=0?' on':'')+'" onclick="togEditDay('+i+')">'+d+'</button>';
+  }).join('');
+}
+function togEditDay(i){
+  var idx=editDays.indexOf(i);
+  if(idx>=0)editDays.splice(idx,1);else editDays.push(i);
+  renderEditDays();
+}
+function saveEditHabit(){
+  var h=S.habits.find(function(x){return x.id===editHid;});if(!h)return;
+  var n=document.getElementById('he-name').value.trim();
+  if(!n){toast2('Enter a name');return;}
+  h.name=n;
+  h.color=editCol;
+  h.freq=editDays.length===7?[]:editDays.slice();
+  save();closeM('m-hedit');closeM('m-hnote');render();
+  toast2('Habit updated ✅');
+}
+function toast2(m){
+  var e=document.getElementById('toast');if(!e)return;
+  e.innerHTML=m;e.classList.add('show');
+  clearTimeout(e._t2);
+  e._t2=setTimeout(function(){e.classList.remove('show');},2000);
 }
  
 </script>
+<div id="toast"></div>
  
-<!-- TODO CHOICE -->
-<div class="ov" id="m-todo-choice">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title">Add to Todo</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn bg" style="width:100%;padding:16px;justify-content:flex-start;gap:12px" onclick="closeM('m-todo-choice');openTodoItemModal(null)">
-        <span style="font-size:22px">✅</span>
-        <div style="text-align:left"><div style="font-weight:700">Add Task</div><div style="font-size:12px;color:var(--sub);margin-top:2px">A single to-do item</div></div>
-      </button>
-      <button class="btn bg" style="width:100%;padding:16px;justify-content:flex-start;gap:12px" onclick="closeM('m-todo-choice');openTodoGroupModal(null)">
-        <span style="font-size:22px">📁</span>
-        <div style="text-align:left"><div style="font-weight:700">Create Group</div><div style="font-size:12px;color:var(--sub);margin-top:2px">Group related tasks together</div></div>
-      </button>
-    </div>
+<!-- EDIT HABIT -->
+<div class="ov" id="m-hedit" style="z-index:300"><div class="modal"><div class="mh"></div>
+  <div class="mt">Edit Habit</div>
+  <div class="fl"><label class="fl-lbl">Name</label><input id="he-name" maxlength="40"></div>
+  <div class="fl"><label class="fl-lbl">Color</label><div class="sw-row" id="sw-edit"></div></div>
+  <div class="fl"><label class="fl-lbl">Repeat on</label><div id="he-days" style="display:flex;gap:6px;flex-wrap:wrap"></div></div>
+  <div style="display:flex;gap:9px;margin-top:4px">
+    <button class="btn bg" style="flex:1" onclick="closeM('m-hedit')">Cancel</button>
+    <button class="btn bp" style="flex:1" onclick="saveEditHabit()">Save</button>
   </div>
-</div>
- 
-<!-- ADD TODO ITEM -->
-<div class="ov" id="m-todo-item">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title" id="todo-item-title">New Task</div>
-    <div class="fl"><label class="fl-lbl">Task Name</label><input id="ti-name" placeholder="e.g. Buy groceries, Finish assignment…" maxlength="80"></div>
-    <div class="fl">
-      <label class="fl-lbl">Priority</label>
-      <div style="display:flex;gap:8px">
-        <button id="pri-low" class="btn bg" style="flex:1;font-size:12px" onclick="setPri('low')">🟢 Low</button>
-        <button id="pri-med" class="btn bg" style="flex:1;font-size:12px" onclick="setPri('med')">🟡 Medium</button>
-        <button id="pri-high" class="btn bg" style="flex:1;font-size:12px" onclick="setPri('high')">🔴 High</button>
-      </div>
-    </div>
-    <div style="display:flex;gap:9px;margin-top:4px">
-      <button class="btn bg" style="flex:1" onclick="closeM('m-todo-item')">Cancel</button>
-      <button class="btn bp" style="flex:1" onclick="saveTodoItem()">Add Task</button>
-    </div>
-  </div>
-</div>
- 
-<!-- ADD TODO GROUP -->
-<div class="ov" id="m-todo-group">
-  <div class="modal">
-    <div class="m-handle"></div>
-    <div class="m-title">New Group</div>
-    <div class="fl"><label class="fl-lbl">Group Name</label><input id="tg-name" placeholder="e.g. 🏠 Home, 📚 Study, 💼 Work" maxlength="40"></div>
-    <div style="display:flex;gap:9px;margin-top:4px">
-      <button class="btn bg" style="flex:1" onclick="closeM('m-todo-group')">Cancel</button>
-      <button class="btn bp" style="flex:1" onclick="saveTodoGroup()">Create</button>
-    </div>
-  </div>
+</div></div>
+<div id="undo-bar" style="
+  position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);
+  background:#1f1f1f;color:#fff;
+  padding:13px 20px;border-radius:14px;
+  font-size:14px;font-weight:600;
+  display:flex;align-items:center;gap:16px;
+  z-index:99999;
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
+  transition:bottom .3s cubic-bezier(.34,1.2,.64,1);
+  min-width:220px;max-width:90vw;
+  border:1px solid rgba(255,255,255,.1);
+">
+  <span id="undo-msg" style="flex:1"></span>
+  <button id="undo-btn" onclick="doUndo2()" style="
+    background:var(--accent);color:#03100e;
+    border:none;border-radius:8px;
+    padding:6px 14px;font-size:13px;font-weight:800;
+    cursor:pointer;flex-shrink:0;font-family:var(--f2);
+  ">UNDO</button>
 </div>
 </body>
 </html>
